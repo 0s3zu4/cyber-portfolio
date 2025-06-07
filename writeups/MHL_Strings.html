@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mobile Hacking Labs: STRINGS</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body {
+      background: #101417;
+      color: #e0e0e0;
+      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .writeup-container {
+      background: #181c20;
+      border-radius: 12px;
+      padding: 32px 24px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 4px 24px #000a;
+    }
+    .writeup-container h1, .writeup-container h2, .writeup-container h3 {
+      color: #00ffcc;
+      margin-top: 1.5em;
+    }
+    .writeup-container h1 {
+      font-size: 2.2em;
+      margin-bottom: 0.4em;
+      border-bottom: 2px solid #00ffcc33;
+      padding-bottom: 0.3em;
+    }
+    .writeup-container h2 {
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+      border-left: 4px solid #00ffcc;
+      padding-left: 0.5em;
+    }
+    .writeup-container h3 {
+      font-size: 1.1em;
+      margin-bottom: 0.5em;
+      color: #1abc9c;
+    }
+    .writeup-container p, .writeup-container li {
+      color: #e0e0e0;
+      font-size: 1.08em;
+      line-height: 1.7em;
+    }
+    .writeup-container ul, .writeup-container ol {
+      margin-left: 1.5em;
+      margin-bottom: 1.5em;
+    }
+    .writeup-container img {
+      display: block;
+      margin: 18px auto 24px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px #0006;
+      max-width: 95%;
+    }
+    .writeup-container code, .writeup-container pre {
+      background: #23272e;
+      color: #00ffcc;
+      border-radius: 5px;
+      padding: 2px 6px;
+      font-size: 1em;
+    }
+    .writeup-container pre {
+      padding: 12px;
+      overflow-x: auto;
+      margin: 18px 0;
+    }
+    .step {
+      color: #00ffcc;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    .pawnd {
+      color: #00ffcc;
+      font-size: 2em;
+      text-align: center;
+      margin: 2em 0 1em 0;
+      letter-spacing: 0.2em;
+      font-weight: bold;
+      text-shadow: 0 2px 12px #00ffcc44;
+    }
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    hr {
+      border: none;
+      border-bottom: 2px solid #222;
+      margin: 2em 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="writeup-container">
+    <h1>Mobile Hacking Labs: STRINGS</h1>
+    <h3>Welcome to the Strings Challenge!</h3>
+    <p>
+      <span class="step">Objective:</span> Reverse engineer the Android app <code>com.mobilehackinglab.challenge</code> and retrieve the hidden flag in the format <code>MHL{...}</code> using dynamic analysis techniques (Frida, Fridump). The app is intentionally vulnerable for educational purposes.
+    </p>
+    <hr>
+    <h2>Tools Used</h2>
+    <ul>
+      <li>Frida</li>
+      <li>Fridump</li>
+      <li>ADB</li>
+      <li>APKTool</li>
+      <li>Emulator (Android x86_64, API 28)</li>
+    </ul>
+    <hr>
+    <h2>Initial Steps and Setup</h2>
+    <ol>
+      <li>
+        <strong>APK Analysis:</strong>
+        <ul>
+          <li>Decompiled APK using JADX-GUI.</li>
+          <li>Found obfuscated Java code with minimal static analysis value.</li>
+          <li>Identified exported activities: <code>MainActivity</code> and <code>Activity2</code>.</li>
+        </ul>
+        <img src="../writeups/strings_resources/578fe6fdc40e4e578d83bebb7e48f43c.png" alt="Activity2.png">
+        <ul>
+          <li><strong>Hardcoded Strings:</strong>
+            <ul>
+              <li>Secret key: <code>"your_secret_key_1234567890123456"</code></li>
+              <li>Encrypted message: <code>"bqGrDKdQ8zo26HflRsGvVA=="</code></li>
+              <li>IV in <code>Activity2Kt.fixedIV</code></li>
+            </ul>
+          </li>
+        </ul>
+        <img src="../writeups/strings_resources/9c99b5d41e2443a2947986c4a16b8aea.png" alt="activity2kt.png">
+        <p>IV string is <code>1234567890123456</code></p>
+      </li>
+      <li>
+        <strong>Cracking the Code:</strong>
+        <ul>
+          <li>Wrote a Python script to decrypt the key:</li>
+          <img src="../writeups/strings_resources/f7256195634440b4b30ac65f9360db5d.png" alt="decode_py.png">
+          <li>Got the key: <code>mhl_secret_1337</code></li>
+          <li>Encoded the secret with base64, as the code checks for a deeplink:</li>
+          <li><code>mhl://labs/bqGrDKdQ8zo26HflRsGvVA==</code> (deeplink)</li>
+          <img src="../writeups/strings_resources/2e008c7dce354fe684c5a6e4a4d67c3c.png" alt="base64ofstring.png">
+        </ul>
+      </li>
+      <li>
+        <strong>Frida Hooking:</strong>
+        <ul>
+          <li>Bypassed <code>SharedPreferences</code> check and triggered the intent using a Frida script:</li>
+          <img src="../writeups/strings_resources/1b2a486f9e2f4364bb4bbdfa245f3e1e.png" alt="fixed frida_hook_bypass...png">
+        </ul>
+        <p>Ran this command:</p>
+        <pre>adb shell am start -a android.intent.action.VIEW -n com.mobilehackinglab.challenge/.Activity2 -d "mhl://labs/bWhsX3NlY3JldF8xMzM3"</pre>
+        <p>Triggered the exported activity, got success, but no flag:</p>
+        <img src="../writeups/strings_resources/4e4d9dafff004bb5a386557a82c136da.png" alt="bypassed_but_no_flag.png">
+      </li>
+    </ol>
+    <hr>
+    <h2>Troubleshooting & Final Solution</h2>
+    <ol>
+      <li>
+        <strong>Errors, Errors, Errors!</strong>
+        <ul>
+          <li>Tried to hook a Frida script to dump memory, but got many errors:</li>
+          <img src="../writeups/strings_resources/773ff9d52859483f8c5638d89f830c72.png" alt="frida errors">
+          <li>Probably because I was using an emulator.</li>
+          <li>Also tried Ghidra for reverse engineering, but was unsuccessful.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>After Research:</strong>
+        <ul>
+          <li>Used Fridump to dump memory, and it worked!</li>
+          <img src="../writeups/strings_resources/1f9d6a081ff140ccbf1234c6101602c7.png" alt="flag.png">
+        </ul>
+        <pre>python3 fridump.py -U -s Strings</pre>
+      </li>
+    </ol>
+    <div class="pawnd">Flag Retrieved! 🎉</div>
+    <a href="../writeups.html">← Back to Write-ups</a>
+  </div>
+</body>
+</html>

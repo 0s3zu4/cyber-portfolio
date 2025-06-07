@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Write-ups - d3f4ult</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .writeup-container {
+      background: #181c20;
+      border-radius: 12px;
+      padding: 32px 24px;
+      max-width: 800px;
+      margin: 40px auto;
+      box-shadow: 0 4px 24px #000a  ;
+    }
+    .writeup-container h1, .writeup-container h2, .writeup-container h3 {
+      color: #00ffcc;
+      margin-top: 1.5em;
+    }
+    .writeup-container h1 {
+      font-size: 2.2em;
+      margin-bottom: 0.4em;
+      border-bottom: 2px solid #00ffcc33;
+      padding-bottom: 0.3em;
+    }
+    .writeup-container h2 {
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+      border-left: 4px solid #00ffcc;
+      padding-left: 0.5em;
+    }
+    .writeup-container p, .writeup-container li {
+      color: #e0e0e0;
+      font-size: 1.08em;
+      line-height: 1.7em;
+    }
+    .writeup-container ul {
+      margin-left: 1.5em;
+      margin-bottom: 1.5em;
+    }
+    .writeup-container img {
+      display: block;
+      margin: 18px auto 24px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px #0006;
+      max-width: 95%;
+    }
+    .writeup-container code, .writeup-container pre {
+      background: #23272e;
+      color: #00ffcc;
+      border-radius: 5px;
+      padding: 2px 6px;
+      font-size: 1em;
+    }
+    .writeup-container pre {
+      padding: 12px;
+      overflow-x: auto;
+      margin: 18px 0;
+    }
+    .pawnd {
+      color: #00ffcc;
+      font-size: 2em;
+      text-align: center;
+      margin: 2em 0 1em 0;
+      letter-spacing: 0.2em;
+      font-weight: bold;
+      text-shadow: 0 2px 12px #00ffcc44;
+    }
+    .step {
+      color: #00ffcc;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    .toc {
+      background: #23272e;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 8px #0004;
+    }
+    .toc ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+    .toc a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .toc a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="writeup-container">
+    <div class="toc">
+      <h2>Table of Contents</h2>
+      <ul>
+        <li><a href="#iot-connect">IOT CONNECT - Broadcast Receiver Exploit</a></li>
+        <!-- Add more write-ups here -->
+      </ul>
+    </div>
+
+    <h1 id="iot-connect">Mobile Hacking Labs: IOT CONNECT</h1>
+    <p>
+      <span class="step">Challenge:</span> Exploit a security flaw in the <strong>IOT Connect</strong> app's broadcast receiver, allowing unauthorized users to activate the master switch and control all connected devices. The goal is to send a broadcast so that only authenticated users can trigger the master switch.
+    </p>
+
+    <h2>Step 1: Reconnaissance</h2>
+    <p>
+      Installed the app, started it, and used <strong>Drozer</strong> to map out the attack surface.
+    </p>
+    <img src="../writeups/iot_resources/4b7eabba3e7f406c8a9d554fa9ba87c4.png" alt="Drozer mapping">
+
+    <h2>Step 2: Static Analysis</h2>
+    <ul>
+      <li>Searched for <code>Master Receiver</code> in JADX-GUI after decompiling the app, and found the <code>communication manager</code> class.</li>
+      <li><img src="../writeups/iot_resources/c3ccd824f5ba4f48be7d359d25a70136.png" alt="Communication Manager"></li>
+      <li>Found an action to trigger the master receiver (<code>MASTER_ON</code>) that also required a <code>key</code>.</li>
+    </ul>
+
+    <h2>Step 3: Attempted Exploitation</h2>
+    <ul>
+      <li>Ran this command in Drozer:</li>
+    </ul>
+    <pre>run app.broadcast.send --action MASTER_ON</pre>
+    <p>
+      This returned an error: <code>Wrong PIN!!</code>
+    </p>
+
+    <h2>Step 4: Key Discovery</h2>
+    <ul>
+      <li>Checked further in the code and found the <code>checker</code> class.</li>
+      <li><img src="../writeups/iot_resources/247e5d05999b45089fa55f177d24bf18.png" alt="Checker class"></li>
+      <li>
+        <ul>
+          <li>Uses AES/ECB/PKCS5Padding for decryption.</li>
+          <li>The key is an int, converted to a UTF-8 byte array and padded/truncated to 16 bytes.</li>
+          <li>If the decryption result equals <code>master_on</code>, <code>check_key()</code> returns true.</li>
+        </ul>
+      </li>
+      <li>Wrote a script to brute-force the password (the app uses a three-digit password):</li>
+      <li><img src="../writeups/iot_resources/7c4c1a74f8ee4de79ceeb112cd2192f0.png" alt="Getting key"></li>
+      <li>The script revealed the key: <code>345</code></li>
+    </ul>
+
+    <h2>Step 5: Exploitation</h2>
+    <p>
+      Ran the following ADB command with the <code>--ei</code> flag to pass the key:
+    </p>
+    <pre>adb shell am broadcast -a MASTER_ON --ei key 345</pre>
+    <img src="../writeups/iot_resources/36351d0996aa4a0eba9a7442d5118c7b.png" alt="Solved">
+
+    <div class="pawnd">PWND! 🎉</div>
+  </div>
+</body>
+</html>

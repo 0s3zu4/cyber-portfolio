@@ -1,12 +1,417 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>d3f4ult | Cybersecurity Portfolio</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #101417 0%, #181c20 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+    .main-container {
+      max-width: 950px;
+      margin: 48px auto 32px auto;
+      background: rgba(24,28,32,0.98);
+      border-radius: 18px;
+      box-shadow: 0 8px 48px #00ffcc22, 0 2px 12px #000a;
+      padding: 48px 32px 36px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .avatar {
+      display: block;
+      margin: 0 auto 18px auto;
+      border-radius: 50%;
+      width: 120px;
+      box-shadow: 0 2px 18px #00ffcc55;
+      border: 4px solid #00ffcc77;
+      transition: transform 0.2s;
+    }
+    .avatar:hover {
+      transform: scale(1.07) rotate(-3deg);
+      box-shadow: 0 4px 32px #00ffcc99;
+    }
+    h1 {
+      color: #00ffcc;
+      text-align: center;
+      font-size: 2.7em;
+      margin-bottom: 0.2em;
+      letter-spacing: 0.04em;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      text-shadow: 0 2px 16px #00ffcc33;
+      animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .intro {
+      text-align: center;
+      font-size: 1.18em;
+      color: #e0e0e0;
+      margin-bottom: 1.7em;
+      animation: fadeIn 1.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    .highlight {
+      color: #00ffcc;
+      font-weight: bold;
+      background: linear-gradient(90deg, #00ffcc44 60%, #1abc9c22 100%);
+      border-radius: 6px;
+      padding: 0 6px;
+    }
+    .section-divider {
+      border: none;
+      border-bottom: 2px solid #00ffcc33;
+      margin: 2.5em 0 2em 0;
+    }
+    h2 {
+      color: #1abc9c;
+      margin-top: 2em;
+      margin-bottom: 0.7em;
+      font-size: 1.4em;
+      border-left: 4px solid #00ffcc;
+      padding-left: 0.5em;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #00ffcc11 60%, #1abc9c09 100%);
+      border-radius: 4px;
+      box-shadow: 0 1px 8px #00ffcc11;
+    }
+    ul, ol {
+      margin-left: 1.5em;
+      margin-bottom: 1.5em;
+      font-size: 1.07em;
+    }
+    li {
+      margin-bottom: 0.5em;
+    }
+    .credly-card {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(90deg, #23272e 80%, #00ffcc11 100%);
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #00ffcc22;
+      padding: 18px 22px;
+      margin: 22px 0 32px 0;
+      max-width: 440px;
+      gap: 18px;
+      animation: fadeIn 1.5s;
+    }
+    .credly-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #00ffcc44;
+      background: #fff;
+    }
+    .credly-card .credly-info {
+      flex: 1;
+    }
+    .credly-card .credly-title {
+      color: #00ffcc;
+      font-weight: bold;
+      font-size: 1.13em;
+      margin-bottom: 4px;
+    }
+    .credly-card .credly-desc {
+      color: #b0b0b0;
+      font-size: 0.99em;
+      margin-bottom: 8px;
+    }
+    .credly-card .credly-link {
+      display: inline-block;
+      background: #00ffcc;
+      color: #181c20;
+      font-weight: bold;
+      padding: 7px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      font-size: 1em;
+      box-shadow: 0 1px 8px #00ffcc33;
+    }
+    .credly-card .credly-link:hover {
+      background: #1abc9c;
+      color: #fff;
+    }
+    .writeup-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+      justify-content: center;
+      margin: 32px 0 0 0;
+      animation: fadeIn 1.5s;
+    }
+    .writeup-card {
+      background: linear-gradient(120deg, #23272e 80%, #00ffcc11 100%);
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #00ffcc22;
+      padding: 26px 22px 20px 22px;
+      width: 300px;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1.5px solid #23272e;
+      transition: transform 0.18s, box-shadow 0.18s, border 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .writeup-card:before {
+      content: '';
+      position: absolute;
+      top: -40px; left: -40px;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, #00ffcc33 0%, transparent 70%);
+      z-index: 0;
+    }
+    .writeup-card:hover {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow: 0 8px 32px #00ffcc33;
+      border-color: #00ffcc;
+    }
+    .writeup-title {
+      color: #00ffcc;
+      font-size: 1.18em;
+      font-weight: bold;
+      margin-bottom: 0.4em;
+      text-decoration: none;
+      transition: color 0.15s;
+      z-index: 1;
+      position: relative;
+    }
+    .writeup-card:hover .writeup-title {
+      color: #1abc9c;
+    }
+    .writeup-desc {
+      color: #b0b0b0;
+      font-size: 1em;
+      margin-bottom: 1em;
+      min-height: 48px;
+      z-index: 1;
+      position: relative;
+    }
+    .writeup-link {
+      margin-top: auto;
+      align-self: flex-end;
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1em;
+      border-radius: 6px;
+      padding: 6px 16px;
+      background: #181c20;
+      transition: background 0.15s, color 0.15s;
+      border: 1px solid #23272e;
+      z-index: 1;
+      position: relative;
+    }
+    .writeup-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+      border-color: #00ffcc;
+    }
+    .section-divider {
+      border: none;
+      border-bottom: 2px solid #00ffcc33;
+      margin: 2.5em 0 2em 0;
+    }
+    .social-links {
+      text-align: center;
+      margin-top: 2.5em;
+      animation: fadeIn 2s;
+    }
+    .social-links a {
+      color: #00ffcc;
+      margin: 0 12px;
+      font-size: 1.2em;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .social-links a:hover {
+      color: #1abc9c;
+      text-decoration: underline;
+    }
+    .typewriter {
+      display: inline-block;
+      border-right: 2px solid #00ffcc;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 2.2s steps(30, end), blink-caret .75s step-end infinite;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      color: #00ffcc;
+      font-size: 1.15em;
+      margin: 0 0 0 4px;
+    }
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #00ffcc; }
+    }
+    /* Responsive */
+    @media (max-width: 700px) {
+      .main-container { padding: 18px 2vw; }
+      .writeup-links { flex-direction: column; gap: 16px; }
+      .writeup-card { width: 98%; }
+      .credly-card { max-width: 98vw; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to My Cybersecurity Portfolio</h1>
-  <p>I focus on API, Web, and Mobile hacking.</p>
-  <a href="about.html">About Me</a>
+  <div class="main-container">
+    <img src="images/pp.jpeg" alt="d3f4ult avatar" class="avatar">
+
+    <h1>
+      Hi, I'm <span class="highlight">Osezua</span>
+    </h1>
+    <div style="text-align:center; margin-bottom: 1.2em;">
+      <span class="typewriter" id="typewriter"></span>
+    </div>
+    <div class="intro">
+      I’m a passionate <span class="highlight">Cybersecurity Analyst</span> focused on <strong>offensive security</strong>, <strong>web/API/mobile hacking</strong>.<br>
+      I love breaking things, learning, and sharing knowledge through hands-on labs and detailed write-ups.
+    </div>
+
+    <h2>👤 Who Am I?</h2>
+    <p>
+      I’m <strong>osezua Agboifoh</strong>, a driven and curious cybersecurity analyst with a deep passion for ethical hacking and digital defense. 
+      My journey is rooted in a strong desire to understand how modern systems are attacked and more importantly, how to defend them. 
+      I enjoy dissecting the logic behind exploits, reverse engineering mobile apps, and breaking APIs to better secure them.
+    </p>
+    <p>
+      I approach cybersecurity like a puzzle, each vulnerability is a challenge to uncover, and each fix is a step toward stronger infrastructure.
+      Whether I'm intercepting API traffic with Burp Suite, reverse engineering Android apps with Frida and Drozer, or building vulnerable labs to learn offensive tactics, I believe that hands-on learning is the most powerful teacher.
+    </p>
+
+    <h2>🛠️ Interests & Core Skills</h2>
+    <ul>
+      <li><strong>🔍 Ethical Hacking:</strong> Penetration testing, vulnerability assessments, and red teaming simulations to identify real-world risks.</li>
+      <li><strong>📲 Mobile Application Security:</strong> Android reverse engineering, dynamic analysis with Frida, Drozer, APKTool, and uncovering insecure components in apps.</li>
+      <li><strong>🔗 API Security:</strong> Manual exploitation of REST APIs following OWASP API Top 10, including authentication bypass, BOLA, and mass assignment vulnerabilities.</li>
+      <li><strong>💥 Threat Analysis:</strong> Researching and reproducing attack vectors like XSS, SQLi, CSRF, IDOR, and SSRF across web and API layers.</li>
+      <li><strong>🔐 Password Security:</strong> Password hashing, cracking tools, brute-force techniques, and securing authentication flows.</li>
+      <li><strong>⚙️ Hands-On Practice:</strong> Active in CTF platforms, Android security labs, API security simulators, and custom Docker-based testbeds for security testing.</li>
+      <li><strong>🧪 Offensive Security Mindset:</strong> Constantly learning how attackers operate, including exploit chains, privilege escalation, and misconfigurations.</li>
+    </ul>
+
+    <h2>🔐 What I Do</h2>
+    <ul>
+      <li>Manual API testing (OWASP API Top 10, Postman, Burp Suite)</li>
+      <li>Web Penetration testing</li>
+      <li>Reverse engineering Android apps (Frida, Drozer, MobSF, JADX, APKTool)</li>
+      <li>Building intentionally vulnerable apps and APIs for learning</li>
+      <li>Developing secure APIs (OAuth 2.0, JWT, API Gateways, Docker)</li>
+      <li>Writing detailed exploit write-ups and documentation</li>
+    </ul>
+
+    <h2>📜 Certifications & Courses</h2>
+    <ul>
+      <li>APIsec University - Certified Practitioner (ACP)</li>
+      <li>Certified Mobile Pentester - Android (CMPen-Android)</li>
+      <li>ISC2 Certified in Cybersecurity (ISC2 CC)</li>
+      <li>Cisco Netacad Junior Cybersecurity Path</li>
+      <li>Mobile Hacking Labs (Frida, Drozer, APKTool)</li>
+    </ul>
+    <div class="credly-card">
+      <img src="images/creadly.png" alt="Credly Badge">
+      <div class="credly-info">
+        <div class="credly-title">My Verified Badges & Certificates</div>
+        <div class="credly-desc">
+          Explore my latest certifications and digital badges on Credly.
+        </div>
+        <a class="credly-link" href="https://www.credly.com/users/osezua-agboifoh" target="_blank">
+          View on Credly →
+        </a>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2>🚩 Featured Write-ups</h2>
+    <div class="writeup-links">
+      <div class="writeup-card">
+        <a class="writeup-title" href="writeups/MHL_Strings.html">Mobile Hacking Labs: STRINGS</a>
+        <div class="writeup-desc">
+          Reverse engineering and dynamic analysis to retrieve a hidden flag from an Android app using Frida, Fridump, and static analysis tools.
+        </div>
+        <a class="writeup-link" href="writeups/MHL_Strings.html">Read Write-up →</a>
+      </div>
+      <div class="writeup-card">
+        <a class="writeup-title" href="writeups/MHL_Cyclicscanner.html">Mobile Hacking Labs: CyclicScanner RCE</a>
+        <div class="writeup-desc">
+          Exploiting a command injection vulnerability in the CyclicScanner app to achieve remote code execution via malicious filenames.
+        </div>
+        <a class="writeup-link" href="writeups/MHL_Cyclicscanner.html">Read Write-up →</a>
+      </div>
+      <div class="writeup-card">
+        <a class="writeup-title" href="writeups/HACKING LABS- IOT CONNECT.html">Mobile Hacking Labs: IOT CONNECT</a>
+        <div class="writeup-desc">
+          Exploiting insecure broadcast receivers in an IoT control app to gain unauthorized access and control over connected devices.
+        </div>
+        <a class="writeup-link" href="writeups/HACKING LABS- IOT CONNECT.html">Read Write-up →</a>
+      </div>
+      <div class="writeup-card">
+        <a class="writeup-title" href="writeups.html">All Cybersecurity Write-ups</a>
+        <div class="writeup-desc">
+          Browse the full list of my hands-on labs, exploit write-ups, and technical notes.
+        </div>
+        <a class="writeup-link" href="writeups.html">See All Write-ups →</a>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="social-links">
+      <a href="mailto:agboifohosezua@outlook.com">Email</a>
+      <a href="https://github.com/0s3zu4" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank">LinkedIn</a>
+      <a href="https://x.com/__zua" target="_blank">X (Twitter)</a>
+    </div>
+  </div>
+  <script>
+    // Typewriter effect for dynamic intro
+    const words = [
+      "Mobile Penetration Tester",
+      "API Security Enthusiast",
+      "Reverse Engineer",
+      "Penetration Tester",
+        "Web App Exploiter",
+    ];
+    let i = 0, j = 0, isDeleting = false, current = '', typeSpeed = 90, pause = 1200;
+    const tw = document.getElementById('typewriter');
+    function typeLoop() {
+      if (!tw) return;
+      if (!isDeleting && j <= words[i].length) {
+        current = words[i].substring(0, j++);
+        tw.textContent = current;
+        setTimeout(typeLoop, typeSpeed);
+      } else if (isDeleting && j >= 0) {
+        current = words[i].substring(0, j--);
+        tw.textContent = current;
+        setTimeout(typeLoop, typeSpeed / 2);
+      } else if (!isDeleting) {
+        isDeleting = true;
+        setTimeout(typeLoop, pause);
+      } else {
+        isDeleting = false;
+        i = (i + 1) % words.length;
+        setTimeout(typeLoop, 500);
+      }
+    }
+    typeLoop();
+  </script>
 </body>
 </html>
