@@ -13,6 +13,38 @@
       color: #e0e0e0;
       overflow-x: hidden;
     }
+    .navbar {
+      width: 100vw;
+      background: rgba(16, 20, 23, 0.98);
+      box-shadow: 0 2px 16px #00ffcc22;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 56px;
+      padding: 0 2vw;
+    }
+    .navbar-links {
+      display: flex;
+      gap: 36px;
+    }
+    .navbar-link {
+      color: #00ffcc;
+      text-decoration: none;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      padding: 8px 18px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+    }
     .main-container {
       max-width: 950px;
       margin: 48px auto 32px auto;
@@ -22,6 +54,7 @@
       padding: 48px 32px 36px 32px;
       position: relative;
       overflow: hidden;
+      margin-top: 80px; /* Add space for navbar */
     }
     .avatar {
       display: block;
@@ -263,7 +296,9 @@
     }
     /* Responsive */
     @media (max-width: 700px) {
-      .main-container { padding: 18px 2vw; }
+      .navbar-links { gap: 18px; }
+      .navbar { height: 48px; }
+      .main-container { margin-top: 64px; padding: 18px 2vw; }
       .writeup-links { flex-direction: column; gap: 16px; }
       .writeup-card { width: 98%; }
       .credly-card { max-width: 98vw; }
@@ -271,6 +306,13 @@
   </style>
 </head>
 <body>
+  <nav class="navbar">
+    <div class="navbar-links">
+      <a class="navbar-link" href="index.html">Home</a>
+      <a class="navbar-link" href="writeups.html">Write-ups</a>
+      <a class="navbar-link" href="projects.html">Projects</a>
+    </div>
+  </nav>
   <div class="main-container">
     <img src="images/pp.jpeg" alt="d3f4ult avatar" class="avatar">
 

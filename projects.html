@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Write-ups | d3f4ult</title>
+  <title>Projects | d3f4ult</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body {
@@ -58,14 +58,14 @@
       border-bottom: 2px solid #00ffcc33;
       padding-bottom: 0.3em;
     }
-    .writeup-list {
+    .project-list {
       display: flex;
       flex-wrap: wrap;
       gap: 32px;
       justify-content: center;
       margin-top: 40px;
     }
-    .writeup-card {
+    .project-card {
       background: #181c20;
       border-radius: 12px;
       box-shadow: 0 4px 24px #000a;
@@ -78,12 +78,12 @@
       transition: transform 0.15s, box-shadow 0.15s;
       border: 1.5px solid #23272e;
     }
-    .writeup-card:hover {
+    .project-card:hover {
       transform: translateY(-6px) scale(1.03);
       box-shadow: 0 8px 32px #00ffcc33;
       border-color: #00ffcc;
     }
-    .writeup-title {
+    .project-title {
       color: #00ffcc;
       font-size: 1.25em;
       font-weight: bold;
@@ -91,16 +91,16 @@
       text-decoration: none;
       transition: color 0.15s;
     }
-    .writeup-card:hover .writeup-title {
+    .project-card:hover .project-title {
       color: #1abc9c;
     }
-    .writeup-desc {
+    .project-desc {
       color: #b0b0b0;
       font-size: 1em;
       margin-bottom: 1.2em;
       min-height: 60px;
     }
-    .writeup-link {
+    .project-link {
       margin-top: auto;
       align-self: flex-end;
       color: #00ffcc;
@@ -113,44 +113,24 @@
       transition: background 0.15s, color 0.15s;
       border: 1px solid #23272e;
     }
-    .writeup-link:hover {
+    .project-link:hover {
       background: #00ffcc;
       color: #181c20;
       border-color: #00ffcc;
     }
     @media (max-width: 700px) {
-      .writeup-list {
+      .project-list {
         flex-direction: column;
         gap: 20px;
         align-items: center;
       }
-      .writeup-card {
+      .project-card {
         width: 98%;
         min-width: unset;
       }
       .container {
         margin-top: 70px;
       }
-    }
-    .back-home {
-      display: block;
-      margin: 40px auto 0 auto;
-      text-align: center;
-      color: #00ffcc;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 1.1em;
-      border-radius: 6px;
-      padding: 8px 24px;
-      background: #23272e;
-      width: fit-content;
-      transition: background 0.15s, color 0.15s;
-      border: 1px solid #23272e;
-    }
-    .back-home:hover {
-      background: #00ffcc;
-      color: #181c20;
-      border-color: #00ffcc;
     }
   </style>
 </head>
@@ -163,39 +143,21 @@
     </div>
   </nav>
   <div class="container">
-    <h1>Cybersecurity Write-ups</h1>
-    <div class="writeup-list">
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/SETTING%20UP%20ANDROID%20HACKING%20ENVIRONMENT.html">Setting Up Android Hacking Environment</a>
-        <div class="writeup-desc">
-          Step-by-step guide to building a modern Android pentesting lab: emulators, root, Magisk, Burp Suite, and more. Includes emulator setup, certificate installation, and traffic interception.
+    <h1>Projects</h1>
+    <div class="project-list">
+      <div class="project-card">
+        <a class="project-title" href="Projects/android-lab-scripts.html">
+          Android Lab Scripts
+        </a>
+        <div class="project-desc">
+          Automation for Burp cert install, Magisk rooting, and fixing AVD issues in Android Studio emulator.
         </div>
-        <a class="writeup-link" href="writeups/SETTING%20UP%20ANDROID%20HACKING%20ENVIRONMENT.html">Read Write-up →</a>
+        <a class="project-link" href="https://github.com/0s3zu4/android-lab-scripts" target="_blank" rel="noopener">
+          View on GitHub →
+        </a>
       </div>
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/MHL_Strings.html">Mobile Hacking Labs: STRINGS</a>
-        <div class="writeup-desc">
-          Reverse engineering and dynamic analysis to retrieve a hidden flag from an Android app using Frida, Fridump, and static analysis tools.
-        </div>
-        <a class="writeup-link" href="writeups/MHL_Strings.html">Read Write-up →</a>
-      </div>
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/MHL_Cyclicscanner.html">Mobile Hacking Labs: CyclicScanner RCE</a>
-        <div class="writeup-desc">
-          Exploiting a command injection vulnerability in the CyclicScanner app to achieve remote code execution via malicious filenames.
-        </div>
-        <a class="writeup-link" href="writeups/MHL_Cyclicscanner.html">Read Write-up →</a>
-      </div>
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/MHL_IOTConnect.html">Mobile Hacking Labs: IOT CONNECT</a>
-        <div class="writeup-desc">
-          Exploiting insecure broadcast receivers in an IoT control app to gain unauthorized access and control over connected devices.
-        </div>
-        <a class="writeup-link" href="writeups/MHL_IOTConnect.html">Read Write-up →</a>
-      </div>
-      <!-- Add more write-up cards here as you create them -->
+      <!-- Add more project cards as needed -->
     </div>
-    <a class="back-home" href="index.html">← Back to Home</a>
   </div>
 </body>
 </html>

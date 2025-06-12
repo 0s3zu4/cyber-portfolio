@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Write-ups - d3f4ult</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Mobile Hacking Labs: IOT CONNECT</title>
+  <link rel="stylesheet" href="../style.css">
   <style>
+    body {
+      background: #101417;
+      color: #e0e0e0;
+      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
     .writeup-container {
       background: #181c20;
       border-radius: 12px;
       padding: 32px 24px;
       max-width: 800px;
-      margin: 40px auto;
-      box-shadow: 0 4px 24px #000a  ;
+      margin: 90px auto 40px auto;
+      box-shadow: 0 4px 24px #000a;
     }
     .writeup-container h1, .writeup-container h2, .writeup-container h3 {
       color: #00ffcc;
@@ -21,6 +29,7 @@
       margin-bottom: 0.4em;
       border-bottom: 2px solid #00ffcc33;
       padding-bottom: 0.3em;
+      text-align: center;
     }
     .writeup-container h2 {
       font-size: 1.3em;
@@ -89,9 +98,54 @@
     .toc a:hover {
       text-decoration: underline;
     }
+    /* Navbar styles */
+    .navbar {
+      width: 100vw;
+      background: #181c20;
+      box-shadow: 0 2px 16px #00ffcc22;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 56px;
+      padding: 0 2vw;
+    }
+    .navbar-links {
+      display: flex;
+      gap: 36px;
+    }
+    .navbar-link {
+      color: #00ffcc;
+      text-decoration: none;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      padding: 8px 18px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+    }
+    @media (max-width: 700px) {
+      .navbar-links { gap: 18px; }
+      .navbar { height: 48px; }
+      .writeup-container { padding: 12px 2vw; }
+    }
   </style>
 </head>
 <body>
+  <nav class="navbar">
+    <div class="navbar-links">
+      <a class="navbar-link" href="../index.html">Home</a>
+      <a class="navbar-link" href="../writeups.html">Write-ups</a>
+      <a class="navbar-link" href="../projects.html">Projects</a>
+    </div>
+  </nav>
   <div class="writeup-container">
     <div class="toc">
       <h2>Table of Contents</h2>

@@ -96,10 +96,55 @@
       border-bottom: 2px solid #222;
       margin: 2em 0;
     }
+    /* Consistent navbar styles */
+    .navbar {
+      width: 100vw;
+      background: #181c20;
+      box-shadow: 0 2px 16px #00ffcc22;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 56px;
+      padding: 0 2vw;
+    }
+    .navbar-links {
+      display: flex;
+      gap: 36px;
+    }
+    .navbar-link {
+      color: #00ffcc;
+      text-decoration: none;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      padding: 8px 18px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+    }
+    @media (max-width: 700px) {
+      .navbar-links { gap: 18px; }
+      .navbar { height: 48px; }
+      .writeup-container { padding: 12px 2vw; }
+    }
   </style>
 </head>
 <body>
-  <div class="writeup-container">
+  <nav class="navbar">
+    <div class="navbar-links">
+      <a class="navbar-link" href="../index.html">Home</a>
+      <a class="navbar-link" href="../writeups.html">Write-ups</a>
+      <a class="navbar-link" href="../projects.html">Projects</a>
+    </div>
+  </nav>
+  <div class="writeup-container" style="margin-top:90px;">
     <h1>Mobile Hacking Labs: STRINGS</h1>
     <h3>Welcome to the Strings Challenge!</h3>
     <p>

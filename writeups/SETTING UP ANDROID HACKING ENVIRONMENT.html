@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SETTING UP ANDROID HACKING ENVIRONMENT | d3f4ult</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #101417 0%, #181c20 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+    .main-container {
+      max-width: 950px;
+      margin: 80px auto 32px auto;
+      background: rgba(24,28,32,0.98);
+      border-radius: 18px;
+      box-shadow: 0 8px 48px #00ffcc22, 0 2px 12px #000a;
+      padding: 48px 32px 36px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    h1, h2, h3 {
+      color: #00ffcc;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      text-shadow: 0 2px 16px #00ffcc33;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 0.6em;
+    }
+    h2 {
+      margin-top: 2em;
+      margin-bottom: 0.7em;
+      font-size: 1.4em;
+      border-left: 4px solid #00ffcc;
+      padding-left: 0.5em;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #00ffcc11 60%, #1abc9c09 100%);
+      border-radius: 4px;
+      box-shadow: 0 1px 8px #00ffcc11;
+    }
+    h3 {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+      font-size: 1.1em;
+      color: #1abc9c;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+    }
+    .intro-large {
+      text-align: center;
+      font-size: 1.25em;
+      color: #e0e0e0;
+      margin-bottom: 2em;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    ul, ol {
+      margin-left: 2em;
+      margin-bottom: 1.5em;
+      font-size: 1.07em;
+      padding-left: 0;
+    }
+    li {
+      margin-bottom: 0.7em;
+      line-height: 1.7;
+      list-style-position: outside;
+    }
+    .img-center {
+      display: block;
+      margin: 16px auto 16px auto;
+      max-width: 90%;
+      border: 1px solid #23272e;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px #00ffcc22;
+    }
+    pre, code {
+      background: #23272e;
+      color: #00ffcc;
+      border-radius: 6px;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+    }
+    pre {
+      padding: 1em;
+      overflow-x: auto;
+      font-size: 1.08em;
+      margin-bottom: 1em;
+      box-shadow: 0 2px 12px #00ffcc22;
+      border: 1px solid #23272e;
+    }
+    code {
+      padding: 0.2em 0.4em;
+      font-size: 1.08em;
+    }
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    a:hover {
+      color: #1abc9c;
+      text-decoration: underline;
+    }
+    hr {
+      margin: 2rem 0;
+      border: none;
+      border-bottom: 2px solid #00ffcc33;
+    }
+    .writeup-link {
+      display: inline-block;
+      margin-top: 2em;
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+      border-radius: 6px;
+      padding: 10px 22px;
+      background: #23272e;
+      transition: background 0.15s, color 0.15s;
+      border: 1px solid #23272e;
+      box-shadow: 0 1px 8px #00ffcc33;
+    }
+    .writeup-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+      border-color: #00ffcc;
+    }
+    .navbar {
+      width: 100vw;
+      background: #181c20;
+      box-shadow: 0 2px 16px #00ffcc22;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 56px;
+      padding: 0 2vw;
+    }
+    .navbar-links {
+      display: flex;
+      gap: 36px;
+    }
+    .navbar-link {
+      color: #00ffcc;
+      text-decoration: none;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      padding: 8px 18px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+    }
+    @media (max-width: 700px) {
+      .main-container { margin-top: 64px; padding: 18px 2vw; }
+      .intro-large { font-size: 1.08em; }
+      pre, code { font-size: 1em; }
+      .navbar-links { gap: 18px; }
+      .navbar { height: 48px; }
+      .img-center { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-links">
+      <a class="navbar-link" href="../index.html">Home</a>
+      <a class="navbar-link" href="../writeups.html">Write-ups</a>
+      <a class="navbar-link" href="../projects.html">Projects</a>
+    </div>
+  </nav>
+  <div class="main-container">
+    <h1>SETTING UP ANDROID HACKING ENVIRONMENT</h1>
+    <div class="intro-large">
+      A practical guide to building a modern Android pentesting lab: emulators, root, Magisk, Burp Suite, and more.
+    </div>
+
+    <h2>With Android Studio</h2>
+    <ol>
+      <li>Download Android Studio from the official developers website (about 1.3GB)</li>
+      <li>Unzip the <code>tar.gz</code> file, and move from <code>downloads</code> folder to <code>opt</code>
+        <ul>
+          <li>Should be like this now <code>/opt/android-studio</code></li>
+        </ul>
+      </li>
+      <li>Launch android studio from the opt folder on your terminal: <code>/opt/android-studio/bin/studio</code></li>
+      <li>If you want to launch from the menu, follow these steps:
+        <ul>
+          <li>Create a file: <code>sudo nano /usr/share/applications/android-studio.desktop</code></li>
+          <li>Paste this into the file:
+            <pre>[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Android Studio
+Comment=Official IDE for Android development
+Exec=/opt/android-studio/bin/studio %f
+Icon=/opt/android-studio/bin/studio.png
+Terminal=false
+Categories=Development;IDE;
+StartupWMClass=jetbrains-studio
+</pre>
+          </li>
+          <li>Make it executable: <code>chmod +x ~/.local/share/applications/android-studio.desktop</code></li>
+          <li>Now you can run it from your menu <img class="img-center" src="../writeups/avd_resources/3e0d215f40484044b3114de3cff6b5f3.png" alt="Android Studio menu icon"></li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2 id="creating-an-emulator">Creating an Emulator</h2>
+    <p>For Android Penetration testing, you would basically need two emulators, one with Play Store, another without. I personally use Android 9 (Pie) and Android 12 for my penetration testing, and I will walk you through how I set them up.</p>
+    <ol>
+      <li>
+        <strong>Launch Android Studio</strong>
+        <ul>
+          <li>Open Android Studio.</li>
+          <li>If a project isn't open yet, click "More Actions" &gt; "Virtual Device Manager". <img class="img-center" src="../writeups/avd_resources/698199cd311d4eedb3a7cabd1ab485d7.png" alt="Virtual Device Manager"></li>
+          <li>If you're in a project, go to Tools &gt; Device Manager (formerly AVD Manager)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Open Device Manager</strong>
+        <ul>
+          <li>View existing virtual devices</li>
+          <li>Create a new one</li>
+        </ul>
+        <p>Click on "Create Device", it is a <code>+</code> icon</p>
+      </li>
+      <li>
+        <strong>Select Hardware Profile</strong>
+        <ul>
+          <li>Pixel 7 / Pixel 6 / Pixel 4 – modern and Google-supported</li>
+          <li>I personally use Pixel 3 and Pixel 4 (Lightweight, doesn't slow my system down)</li>
+          <li>Select a device (e.g., Pixel 4) and click Next.</li>
+          <li>For me I select one without the Play Store logo next to it, this comes rooted by default, but if you want to have Play Store on your emulator select the one with Play Store icon. (<strong>NB</strong>: you still have to root the device) <img class="img-center" src="../writeups/avd_resources/82cb48806d9a4742b19041bc2184ab37.png" alt="Select device"></li>
+        </ul>
+      </li>
+      <li>
+        <strong>Select a System Image</strong>
+        <ul>
+          <li><strong>I recommend Android 9 (when downloading without Play Store, API 28) and Android 12 (API 31+) when downloading with Play Store</strong></li>
+          <li><em>Make sure you switch <code>services</code> to <code>android open source</code> when downloading for Android 9</em> <img class="img-center" src="../writeups/avd_resources/8afe5d5635e5422799e21b68d4827cc3.png" alt="Switch services"></li>
+          <li>You can go with Google API if the device you are using has Play Store</li>
+          <li>Choose a system image:
+            <ul>
+              <li>x86_64 or arm64-v8a for modern emulators</li>
+              <li>Recommended: x86_64 + Google APIs</li>
+            </ul>
+          </li>
+          <li>If not already downloaded:
+            <ul>
+              <li>Click "Download" next to the version you want (e.g., API 34 - Android 14)</li>
+              <li>Accept the license and wait for the download to finish</li>
+            </ul>
+          </li>
+          <li>Click Next when done.</li>
+        </ul>
+        <img class="img-center" src="../writeups/avd_resources/b1441fc7a2c34136b1044b11bf363102.png" alt="System image selection">
+        <p><strong>Dependencies</strong></p>
+        <pre>sudo apt install emulator
+sudo apt install google-android-platform-tools-installer
+</pre>
+      </li>
+    </ol>
+
+    <h2 id="setting-up-emulator-without-playstore">Setting up Emulator without Play Store</h2>
+    <ol>
+      <li>List all your available AVDs:
+        <pre>emulator -list-avds</pre>
+      </li>
+      <li>If it returns nothing, download the script to fix the issue, script, and run again.</li>
+      <li>This should return all AVDs like the screenshot below <img class="img-center" src="../writeups/avd_resources/4bed7d1e624442bbaa859afb38e51cc0.png" alt="AVD list"></li>
+      <li>Launch your emulator:
+        <pre>emulator -avd Pixel_3</pre>
+        <span>Change <code>Pixel_3</code> to what is listed in the AVD.<br>And you are good to go!</span>
+      </li>
+    </ol>
+    <hr>
+
+    <h1 id="installing-a-certificate-burp-suite">INSTALLING A CERTIFICATE (Burp Suite)</h1>
+    <h2 id="android-9-api-28">Android 9 (API 28)</h2>
+    <ol>
+      <li>Launch the emulator:
+        <pre>emulator -avd &lt;name of avd&gt; -writable-system</pre>
+      </li>
+      <li>Start Burp Suite and export the certificate in .der format (e.g. <code>burpcert.der</code>) and save.</li>
+      <li>Run these in the same folder where you saved the certificate, one after the other:
+        <pre>openssl x509 -inform DER -in burpcert.der -out burpcert.pem
+openssl x509 -inform PEM -subject_hash_old -in burpcert.pem | head -1
+mv burpcert.pem &lt;hash&gt;.0
+adb push &lt;hash&gt;.0 /sdcard/
+adb root
+adb remount
+adb shell
+cd sdcard/
+mv &lt;hash&gt;.0 /system/etc/security/cacerts/
+cd /system/etc/security/cacerts
+chmod 644 &lt;hash&gt;.0
+</pre>
+      </li>
+      <li>Restart your emulator <img class="img-center" src="../writeups/avd_resources/0328425380ae40fa81fbb283c9abe3c6.png" alt="Restart emulator"></li>
+      <li>Go to settings and set the proxy to 127.0.0.1, port 8080 or whatever you use as proxy <img class="img-center" src="../writeups/avd_resources/07ef79cac0484638978a8db0b5342063.png" alt="Set proxy"></li>
+    </ol>
+    <p>And with that you can now proxy traffic with your emulator.</p>
+    <p>
+      If the process is too long, just 
+      <a href="../Projects/android-lab-scripts.html" target="_blank">download the script here</a> 
+      and run it (this is only tested on Android 9 API 28).
+    </p>
+    <hr>
+
+    <h1 id="rooting-android-emulator-installing-burp-suite-certificate-magisk-alwaystrustusercerts">Rooting Android Emulator &amp; Installing Burp Suite Certificate (Magisk + AlwaysTrustUserCerts)</h1>
+    <p>This guide will walk you through rooting an Android emulator using rootAVD and installing a custom certificate (like Burp Suite’s CA) to intercept HTTPS traffic, which is critical for mobile app testing and pentesting workflows.</p>
+    <ol>
+      <li>
+        <strong>Launch and Prepare Your Android Emulator</strong>
+        <ul>
+          <li>Tested on Android 12 (API Level 32), but should work for other versions too.</li>
+          <li>Open Android Studio or your emulator manager.</li>
+          <li>Launch an AVD (Android Virtual Device).</li>
+        </ul>
+        <span>For this guide, we are using Android 32 (API Level 32) with Google APIs &amp; Play Store.</span>
+      </li>
+      <li>
+        <strong>Clone and Use rootAVD to Root the Emulator</strong>
+        <pre>git clone https://gitlab.com/newbit/rootAVD.git
+cd rootAVD
+./rootAVD.sh ListAllAVDs
+./rootAVD.sh system-images/android-32/google_apis_playstore/x86_64/ramdisk.img
+</pre>
+        <span>During the script execution, you'll see a prompt like:</span>
+        <pre>[s] (s)how all available Magisk Versions
+[1] local stable '26.4' (ENTER)
+[2] stable ()
+[3] canary ()
+</pre>
+        <ul>
+          <li>Type 1 and press Enter to install the local stable version of Magisk 26.4.</li>
+        </ul>
+        <span>After this step, the emulator will shut down automatically. Manually restart it via Android Studio or CLI.</span>
+      </li>
+      <li>
+        <strong>Verify Root Access with Magisk</strong>
+        <ul>
+          <li>Open the Magisk app (automatically installed).</li>
+          <li>Tap OK when prompted and allow it to reboot again.</li>
+          <li>After reboot, verify root access:</li>
+        </ul>
+        <pre>adb shell
+su
+</pre>
+        <ul>
+          <li>If prompted on the emulator, grant root access.</li>
+          <li>You now have a rooted Android emulator!</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2 id="installing-burp-suites-certificate-as-a-system-certificate">Installing Burp Suite’s Certificate as a System Certificate</h2>
+    <ol>
+      <li>
+        <strong>Install the AlwaysTrustUserCerts Module</strong>
+        <ul>
+          <li>Download AlwaysTrustUserCerts v1.3: <a href="https://github.com/NVISOsecurity/AlwaysTrustUserCerts/releases/download/v1.3/AlwaysTrustUserCerts_v1.3.zip" target="_blank">Download ZIP</a></li>
+          <li>Push it to the emulator's internal storage:</li>
+        </ul>
+        <pre>adb push AlwaysTrustUserCerts_v1.3.zip /sdcard/</pre>
+        <ul>
+          <li>In the emulator:
+            <ul>
+              <li>Open the Magisk app.</li>
+              <li>Go to Modules.</li>
+              <li>Tap Install from storage.</li>
+              <li>Select AlwaysTrustUserCerts_v1.3.zip.</li>
+              <li>Follow the prompts and reboot.<br>
+                <img class="img-center" src="../writeups/avd_resources/23723ab8835a4ea3897c180335c72c5f.png" alt="Magisk module install">
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>Export and Install Burp Suite’s Certificate</strong>
+        <ul>
+          <li>Go to Proxy → Options → Import / Export CA Certificate in Burp Suite.</li>
+          <li>Export the certificate in DER format.</li>
+          <li>Save it as burp.crt (must be .crt and named correctly).</li>
+          <li>Push the certificate to the emulator:</li>
+        </ul>
+        <pre>adb push burp.crt /sdcard/</pre>
+        <ul>
+          <li>On the emulator:
+            <ul>
+              <li>Go to Settings → Security → Encryption &amp; Credentials.</li>
+              <li>Tap Install a certificate → CA Certificate.</li>
+              <li>Select the burp.crt file from storage.</li>
+              <li>Install</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>Final Step: Reboot for Certificate to Become a System Cert</strong>
+        <ul>
+          <li>Close the emulator and reboot it.</li>
+          <li>On startup, the AlwaysTrustUserCerts module will automatically promote user-installed certs (like Burp’s) to system-trusted certificates.</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h2 id="final-test-intercept-https-traffic">Final Test: Intercept HTTPS Traffic</h2>
+    <ol>
+      <li>Start Burp Suite and set up the proxy listener (127.0.0.1:8080).</li>
+      <li>Set the emulator’s Wi-Fi proxy to your host machine's IP and port 8080.</li>
+      <li>Open a browser or test app on the emulator.</li>
+      <li>If everything is correct, you should see HTTPS traffic being intercepted by Burp Suite without SSL errors.</li>
+    </ol>
+	<p>Congratulations! You now have a fully rooted Android emulator with Burp Suite’s certificate installed as a system certificate, allowing you to intercept HTTPS traffic seamlessly.</p>
+	<p>
+	  You can <a href="../Projects/android-lab-scripts.html" target="_blank">download the script here to automate the process</a>.
+	</p>
+    <a class="writeup-link" href="../index.html">← Back to Portfolio</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Android Lab Scripts</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 90px auto 40px auto;
+      background: #181c20;
+      border-radius: 12px;
+      padding: 32px 24px;
+      box-shadow: 0 4px 24px #000a;
+    }
+    h1 {
+      color: #00ffcc;
+      font-size: 2em;
+      margin-bottom: 0.5em;
+      text-align: center;
+      border-bottom: 2px solid #00ffcc33;
+      padding-bottom: 0.3em;
+    }
+    h2 {
+      color: #00ffcc;
+      margin-top: 2em;
+      font-size: 1.2em;
+      border-left: 4px solid #00ffcc;
+      padding-left: 0.5em;
+    }
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1abc9c;
+    }
+    ul {
+      margin-left: 1.5em;
+      margin-bottom: 1.5em;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 12px 2vw; }
+    }
+    /* Navbar styles */
+    .navbar {
+      width: 100vw;
+      background: #181c20;
+      box-shadow: 0 2px 16px #00ffcc22;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 56px;
+      padding: 0 2vw;
+    }
+    .navbar-links {
+      display: flex;
+      gap: 36px;
+    }
+    .navbar-link {
+      color: #00ffcc;
+      text-decoration: none;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      padding: 8px 18px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-link:hover {
+      background: #00ffcc;
+      color: #181c20;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-links">
+      <a class="navbar-link" href="../index.html">Home</a>
+      <a class="navbar-link" href="../writeups.html">Write-ups</a>
+      <a class="navbar-link" href="../projects.html">Projects</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>Android Lab Automation Scripts</h1>
+
+    <p>
+      This project automates several tedious steps involved in setting up an Android pentesting environment. 
+      Whether you're working on a CTF challenge or performing a security assessment, these scripts help you save time and eliminate configuration errors.
+    </p>
+
+    <h2>🔧 Features</h2>
+    <ul>
+      <li>✅ Installs Burp Suite certificate into Android emulator (system-wide)</li>
+      <li>✅ Roots the emulator using Magisk for deeper testing capabilities</li>
+      <li>✅ Automatically installs Burp Suite into the emulator</li>
+      <li>✅ Fixes common AVD-related issues like broken networking or missing system images</li>
+    </ul>
+
+    <h2>🧠 Why I Built This</h2>
+    <p>
+      I noticed that setting up a test lab for Android pentesting often took up more time than the actual testing.
+      I built these scripts to create a fast, repeatable, and consistent setup for myself and others in the security community.
+    </p>
+
+    <h2>🧪 Tools & Technologies</h2>
+    <ul>
+      <li>Bash scripting</li>
+      <li>Android Emulator (AVD)</li>
+      <li>Magisk (rooting framework)</li>
+      <li>Burp Suite (interception proxy)</li>
+      <li>ADB (Android Debug Bridge)</li>
+    </ul>
+
+    <h2>🚀 How to Use</h2>
+    <p>Clone the repository and run the setup scripts:</p>
+    <pre><code>git clone https://github.com/0s3zu4/android-lab-scripts.git
+cd android-lab-scripts
+chmod +x *.sh
+
+# Run the setup script
+./setup.sh
+</code></pre>
+
+    <h2>🎥 Demo Video</h2>
+    <p>A video walkthrough of the scripts in action will be uploaded here soon.</p>
+    <!-- Uncomment when ready -->
+    <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe> -->
+
+    <h2>📂 Repository</h2>
+    <p>You can find the full project and source code here:</p>
+    <a href="https://github.com/0s3zu4/android-lab-scripts" target="_blank" rel="noopener">
+      👉 View on GitHub
+    </a>
+
+    <br><br>
+    <a href="../projects.html">← Back to Projects</a>
+  </div>
+</body>
+</html>
+
