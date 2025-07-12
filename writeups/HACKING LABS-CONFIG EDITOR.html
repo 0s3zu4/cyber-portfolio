@@ -55,6 +55,14 @@
     </nav>
   </div>
 
+  <!-- Mobile Side Panel Toggle -->
+  <button class="side-panel-toggle" aria-label="Toggle categories">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Side Panel Overlay -->
+  <div class="side-panel-overlay"></div>
+
   <!-- Side Panel -->
   <aside class="side-panel">
     <div class="side-panel-title">Categories</div>
@@ -203,5 +211,29 @@ yaml.dump(deserializedData); // Used directly</code></pre>
   <!-- Scripts -->
   <script src="../global.js"></script>
   <script src="writeups-theme.js"></script>
+  <script>
+    // Mobile side panel toggle for writeup pages
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidePanelToggle = document.querySelector('.side-panel-toggle');
+      const sidePanel = document.querySelector('.side-panel');
+      const sidePanelOverlay = document.querySelector('.side-panel-overlay');
+      
+      // Mobile side panel toggle
+      if (sidePanelToggle && sidePanel && sidePanelOverlay) {
+        sidePanelToggle.addEventListener('click', () => {
+          sidePanel.classList.toggle('active');
+          sidePanelOverlay.classList.toggle('active');
+          sidePanelToggle.classList.toggle('active');
+        });
+        
+        // Close side panel when clicking overlay
+        sidePanelOverlay.addEventListener('click', () => {
+          sidePanel.classList.remove('active');
+          sidePanelOverlay.classList.remove('active');
+          sidePanelToggle.classList.remove('active');
+        });
+      }
+    });
+  </script>
 </body>
 </html>

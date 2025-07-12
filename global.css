@@ -840,14 +840,26 @@ a:hover {
     width: 100%;
   }
   
+  /* Mobile Side Panel */
   .side-panel {
-    width: 100%;
-    height: auto;
-    position: relative;
-    border-bottom: 1px solid var(--border);
-    padding-top: 20px;
-    padding-bottom: 20px;
-    overflow-y: visible;
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    background: var(--bg-primary);
+    z-index: 1000;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+  
+  .side-panel.active {
+    left: 0;
   }
   
   .side-panel-title {
@@ -862,6 +874,53 @@ a:hover {
   
   .side-panel-dropdown {
     margin-left: 24px;
+  }
+  
+  /* Mobile Side Panel Toggle Button */
+  .side-panel-toggle {
+    display: block;
+    position: fixed;
+    top: 90px;
+    left: 10px;
+    z-index: 999;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .side-panel-toggle:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  .side-panel-toggle i {
+    transition: transform 0.3s ease;
+  }
+  
+  .side-panel-toggle.active i {
+    transform: rotate(180deg);
+  }
+  
+  /* Overlay for mobile side panel */
+  .side-panel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .side-panel-overlay.active {
+    opacity: 1;
+    visibility: visible;
   }
   
   h1 {
