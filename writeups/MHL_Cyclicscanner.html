@@ -1,203 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>HACKING LABS - CYCLICSCANNER</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    body {
-      background: #101417;
-      color: #e0e0e0;
-      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .writeup-container {
-      background: #181c20;
-      border-radius: 12px;
-      padding: 32px 24px;
-      max-width: 800px;
-      margin: 90px auto 40px auto;
-      box-shadow: 0 4px 24px #000a;
-    }
-    .writeup-container h1, .writeup-container h2, .writeup-container h3 {
-      color: #00ffcc;
-      margin-top: 1.5em;
-    }
-    .writeup-container h1 {
-      font-size: 2.2em;
-      margin-bottom: 0.4em;
-      border-bottom: 2px solid #00ffcc33;
-      padding-bottom: 0.3em;
-    }
-    .writeup-container h2 {
-      font-size: 1.3em;
-      margin-bottom: 0.5em;
-      border-left: 4px solid #00ffcc;
-      padding-left: 0.5em;
-    }
-    .writeup-container h3 {
-      font-size: 1.1em;
-      margin-bottom: 0.5em;
-      color: #1abc9c;
-    }
-    .writeup-container p, .writeup-container li {
-      color: #e0e0e0;
-      font-size: 1.08em;
-      line-height: 1.7em;
-    }
-    .writeup-container ul {
-      margin-left: 1.5em;
-      margin-bottom: 1.5em;
-    }
-    .writeup-container img {
-      display: block;
-      margin: 18px auto 24px auto;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px #0006;
-      max-width: 95%;
-    }
-    .writeup-container code, .writeup-container pre {
-      background: #23272e;
-      color: #00ffcc;
-      border-radius: 5px;
-      padding: 2px 6px;
-      font-size: 1em;
-    }
-    .writeup-container pre {
-      padding: 12px;
-      overflow-x: auto;
-      margin: 18px 0;
-    }
-    .step {
-      color: #00ffcc;
-      font-weight: bold;
-      font-size: 1.1em;
-    }
-    .pawnd {
-      color: #00ffcc;
-      font-size: 2em;
-      text-align: center;
-      margin: 2em 0 1em 0;
-      letter-spacing: 0.2em;
-      font-weight: bold;
-      text-shadow: 0 2px 12px #00ffcc44;
-    }
-    a {
-      color: #00ffcc;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    /* Consistent navbar styles */
-    .navbar {
-      width: 100vw;
-      background: #181c20;
-      box-shadow: 0 2px 16px #00ffcc22;
-      position: fixed;
-      top: 0; left: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 56px;
-      padding: 0 2vw;
-    }
-    .navbar-links {
-      display: flex;
-      gap: 36px;
-    }
-    .navbar-link {
-      color: #00ffcc;
-      text-decoration: none;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      font-size: 1.13em;
-      font-weight: bold;
-      letter-spacing: 0.02em;
-      padding: 8px 18px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .navbar-link:hover {
-      background: #00ffcc;
-      color: #181c20;
-    }
-    @media (max-width: 700px) {
-      .navbar-links { gap: 18px; }
-      .navbar { height: 48px; }
-      .writeup-container { padding: 12px 2vw; }
-    }
-  </style>
+  <link rel="stylesheet" href="writeups-theme.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-links">
-      <a class="navbar-link" href="../index.html">Home</a>
-      <a class="navbar-link" href="../writeups.html">Write-ups</a>
-      <a class="navbar-link" href="../projects.html">Projects</a>
-    </div>
-  </nav>
-  <div class="writeup-container">
-    <h1>Mobile Hacking Labs: CyclicScanner RCE</h1>
-    <p>
-      <span class="step">Summary:</span> This report analyzes a critical security vulnerability discovered in the <code>ScanEngine</code> class of the Cyclic Scanner Android application. The vulnerability stems from unsafe use of shell command execution within the app’s file scanning logic.
-    </p>
-    <p>
-      Specifically, user-controlled input (the filename) is passed directly into a shell command without proper sanitization. This creates a command injection vulnerability that can be exploited to achieve Remote Code Execution (RCE) on the device.
-    </p>
-    <p>
-      By crafting a file with a malicious filename containing shell metacharacters (e.g., <code>;</code>, <code>|</code>), an attacker can inject and execute arbitrary system commands. This flaw enables adversaries to gain control over the device, exfiltrate data, or install persistent malware.
-    </p>
-    <p>
-      <em>This type of vulnerability highlights the risks of using shell calls in mobile applications and reinforces the importance of input validation and secure coding practices.</em>
-    </p>
+<canvas id="matrix"></canvas>
 
-    <h2>Vulnerable Code</h2>
-    <p>This code snippet from the app’s decompiled source reveals a classic command injection vulnerability:</p>
-    <pre><code>String command = "toybox sha1sum " + file.getAbsolutePath();
+<header class="brand-header">
+  <div class="brand-logo-wrap">
+    <img src="../images/pp.jpeg" alt="Osezua's photo" class="brand-logo-img">
+    <span class="brand-title">writeups - osezua</span>
+  </div>
+</header>
+
+<!-- Nano Navbar (no dropdowns, with Home button as image) -->
+  <nav class="nano-navbar" id="nanoNav">
+    <a href="../index.html" class="nano-nav-btn" title="Home">
+      <i class="fas fa-home"></i>
+    </a>
+    <a href="../writeups.html" class="nano-nav-btn">Writeups</a>
+    <a href="../projects.html" class="nano-nav-btn">Projects</a>
+  </nav>
+
+<!-- Side Panel -->
+<aside class="side-panel">
+  <div class="side-panel-title">Categories</div>
+  <div class="side-panel-link" data-panel="web">Web <i class="fas fa-caret-down"></i></div>
+  <div class="side-panel-dropdown" id="panel-web">
+    <a href="../writeups.html#web-sqli">SQL Injection in Login Portal</a>
+    <a href="../writeups.html#web-xss">XSS in Feedback Form</a>
+  </div>
+  <div class="side-panel-link" data-panel="mobile">Mobile <i class="fas fa-caret-down"></i></div>
+  <div class="side-panel-dropdown" id="panel-mobile">
+    <a href="./SETTING UP ANDROID HACKING ENVIRONMENT.html">SETTING UP ANDROID HACKING ENVIRONMENT</a>
+    <a href="../writeups/MHL_Cyclicscanner.html">MHL CyclicScanner</a>
+    <a href="../writeups/MHL_IOTConnect.html">MHL IOT Connect</a>
+    <a href="../writeups/MHL_Strings.html">MHL Strings</a>
+    <a href="../writeups/HACKING LABS-CONFIG EDITOR.html">Config Editor</a>
+  </div>
+  <div class="side-panel-link" data-panel="api">API <i class="fas fa-caret-down"></i></div>
+  <div class="side-panel-dropdown" id="panel-api">
+    <a href="../writeups/vAPI.html">vAPI Walkthrough</a>
+  </div>
+</aside>
+
+<main class="writeup-plain">
+  <h1>Mobile Hacking Labs: CyclicScanner RCE</h1>
+  <p>
+    <span class="step">Summary:</span> This report analyzes a critical security vulnerability discovered in the <code>ScanEngine</code> class of the Cyclic Scanner Android application. The vulnerability stems from unsafe use of shell command execution within the app’s file scanning logic.
+  </p>
+  <p>
+    Specifically, user-controlled input (the filename) is passed directly into a shell command without proper sanitization. This creates a command injection vulnerability that can be exploited to achieve Remote Code Execution (RCE) on the device.
+  </p>
+  <p>
+    By crafting a file with a malicious filename containing shell metacharacters (e.g., <code>;</code>, <code>|</code>), an attacker can inject and execute arbitrary system commands. This flaw enables adversaries to gain control over the device, exfiltrate data, or install persistent malware.
+  </p>
+  <p>
+    <em>This type of vulnerability highlights the risks of using shell calls in mobile applications and reinforces the importance of input validation and secure coding practices.</em>
+  </p>
+
+  <h2>Vulnerable Code</h2>
+  <p>This code snippet from the app’s decompiled source reveals a classic command injection vulnerability:</p>
+  <pre><code>String command = "toybox sha1sum " + file.getAbsolutePath();
 Process process = new ProcessBuilder(new String[0])
     .command("sh", "-c", command)
     .directory(Environment.getExternalStorageDirectory())
     .redirectErrorStream(true)
     .start();</code></pre>
-    <p>
-      <strong>Explanation:</strong><br>
-      <code>file.getAbsolutePath()</code> is interpolated unsanitized into a shell command.<br>
-      The full command is executed via <code>sh -c</code>, which means shell metacharacters like <code>;</code> will be evaluated.<br>
-      <strong>This is the injection point for RCE.</strong>
-    </p>
-    <img src="../writeups/cs_resources/f4f667b962f2416388e97de99cfd62f2.png" alt="Vulnerable code screenshot">
+  <p>
+    <strong>Explanation:</strong><br>
+    <code>file.getAbsolutePath()</code> is interpolated unsanitized into a shell command.<br>
+    The full command is executed via <code>sh -c</code>, which means shell metacharacters like <code>;</code> will be evaluated.<br>
+    <strong>This is the injection point for RCE.</strong>
+  </p>
+  <img src="../writeups/cs_resources/f4f667b962f2416388e97de99cfd62f2.png" alt="Vulnerable code screenshot">
 
-    <h2>Exploitation</h2>
-    <h3>Recon the Attack Surface</h3>
-    <p>
-      I used Drozer and Frida to map the entry points that call or wrap around <code>scanFile(File file)</code>:
-    </p>
-    <img src="../writeups/cs_resources/b7eb20dbd2a04aaab15dafd01f4689e5.png" alt="Drozer/Frida mapping">
+  <h2>Exploitation</h2>
+  <h3>Recon the Attack Surface</h3>
+  <p>
+    I used Drozer and Frida to map the entry points that call or wrap around <code>scanFile(File file)</code>:
+  </p>
+  <img src="../writeups/cs_resources/b7eb20dbd2a04aaab15dafd01f4689e5.png" alt="Drozer/Frida mapping">
 
-    <h3>Crafting the Malicious Filename</h3>
-    <p>
-      Created a malicious filename and injected a second command using <code>;</code>:
-    </p>
-    <img src="../writeups/cs_resources/9b5d81b44abd4293830540d08b56984e.png" alt="Malicious filename">
-    <pre><code>nano "file.txt; hacked by 0s3zu4"</code></pre>
-    <p>Pushed the file via adb:</p>
-    <img src="../writeups/cs_resources/6062386e0cf14be7af151695ec63ddcb.png" alt="adb push">
-    <p>
-      If the app scans the file, it will execute and create a file named <code>MHL_RCE</code>.
-    </p>
+  <h3>Crafting the Malicious Filename</h3>
+  <p>
+    Created a malicious filename and injected a second command using <code>;</code>:
+  </p>
+  <img src="../writeups/cs_resources/9b5d81b44abd4293830540d08b56984e.png" alt="Malicious filename">
+  <pre><code>nano "file.txt; hacked by 0s3zu4"</code></pre>
+  <p>Pushed the file via adb:</p>
+  <img src="../writeups/cs_resources/6062386e0cf14be7af151695ec63ddcb.png" alt="adb push">
+  <p>
+    If the app scans the file, it will execute and create a file named <code>MHL_RCE</code>.
+  </p>
 
-    <h3>Verifying Exploitation</h3>
-    <p>
-      Used a Frida script to check the files scanned by the app:
-    </p>
-    <img src="../writeups/cs_resources/03318cd3ad5940a58e853ac94a6f1804.png" alt="Frida script">
-    <img src="../writeups/cs_resources/c6babf999e9e4357ba85dd07bd13b5da.png" alt="Script output">
+  <h3>Verifying Exploitation</h3>
+  <p>
+    Used a Frida script to check the files scanned by the app:
+  </p>
+  <img src="../writeups/cs_resources/03318cd3ad5940a58e853ac94a6f1804.png" alt="Frida script">
+  <img src="../writeups/cs_resources/c6babf999e9e4357ba85dd07bd13b5da.png" alt="Script output">
 
-    <div class="pawnd">RCE Achieved! 🎉</div>
-    <a href="../writeups.html">← Back to Write-ups</a>
+  <div class="pawnd">RCE Achieved! 🎉</div>
+  <a href="../writeups.html">← Back to Write-ups</a>
+</main>
+
+<footer class="footer-socials">
+  <div>
+    <a href="https://github.com/0s3zu4" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://x.com/__zua" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
   </div>
+</footer>
+
+<script src="writeups-theme.js"></script>
 </body>
 </html>

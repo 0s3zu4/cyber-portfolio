@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MHL Config Editor Challenge | Osezua</title>
+  <meta name="description" content="Analysis of SnakeYAML deserialization vulnerability in Android configuration editor">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="../global.css">
+  <link rel="stylesheet" href="writeups-theme.css">
+</head>
+<body>
+  <!-- Matrix Background -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">
+        <img src="../images/pp.jpeg" alt="Osezua">
+        <span>Osezua</span>
+      </a>
+      
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../writeups.html" class="nav-link">Writeups</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </nav>
+      
+      <div class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="../writeups.html" class="mobile-nav-link">Writeups</a>
+      <a href="../projects.html" class="mobile-nav-link">Projects</a>
+    </nav>
+  </div>
+
+  <!-- Side Panel -->
+  <aside class="side-panel">
+    <div class="side-panel-title">Categories</div>
+    <div class="side-panel-link" data-panel="web">Web <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-web">
+      <a href="../writeups.html#web-sqli">SQL Injection in Login Portal</a>
+      <a href="../writeups.html#web-xss">XSS in Feedback Form</a>
+    </div>
+    <div class="side-panel-link" data-panel="mobile">Mobile <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-mobile">
+      <a href="./SETTING UP ANDROID HACKING ENVIRONMENT.html">SETTING UP ANDROID HACKING ENVIRONMENT</a>
+      <a href="./MHL_Cyclicscanner.html">MHL CyclicScanner</a>
+      <a href="./MHL_IOTConnect.html">MHL IOT Connect</a>
+      <a href="./MHL_Strings.html">MHL Strings</a>
+      <a href="./HACKING LABS-CONFIG EDITOR.html">Config Editor</a>
+    </div>
+    <div class="side-panel-link" data-panel="api">API <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-api">
+      <a href="./vAPI.html">vAPI Walkthrough</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="writeup-plain">
+    <div class="writeup-header">
+      <h1>MHL Config Editor Challenge</h1>
+      <div class="writeup-meta">
+        <span class="tag">Mobile</span>
+        <span class="tag">RCE</span>
+        <span class="tag">Deserialization</span>
+      </div>
+    </div>
+
+    <div class="writeup-content">
+      <p>
+        This challenge focuses on a <strong>Remote Code Execution (RCE)</strong> vulnerability 
+        in an Android application's configuration editor, caused by insecure use of the SnakeYAML third-party library.
+      </p>
+      
+      <p>
+        The vulnerability arises from unsafe deserialization of user-supplied YAML files, allowing attackers to execute arbitrary code by leveraging a gadget chain present in the app's codebase.
+      </p>
+      
+      <p>
+        <em>This highlights the risks of insecure deserialization and the importance of restricting types and validating input when using third-party libraries.</em>
+      </p>
+
+      <h2>Vulnerable Library & Code</h2>
+      <p>
+        The app uses the <strong>SnakeYAML</strong> library to load YAML files provided by the user. The following code pattern is present:
+      </p>
+      
+      <pre><code>Yaml yaml = new Yaml();
+Object deserializedData = yaml.load(inputStream); // No type restriction!
+yaml.dump(deserializedData); // Used directly</code></pre>
+      
+      <p>
+        <strong>Explanation:</strong><br>
+        <ul>
+          <li>The app loads YAML from a file you provide (uri).</li>
+          <li>It calls <code>yaml.load(inputStream)</code>, which deserializes into Java objects without restriction.</li>
+          <li>There's no type constraint (like <code>yaml.loadAs(..., MyClass.class)</code>), so arbitrary objects can be deserialized.</li>
+          <li>It uses the deserialized object right away (<code>yaml.dump(deserializedData)</code> → displays it).</li>
+        </ul>
+      </p>
+      
+      <div class="image-gallery">
+        <img src="./config_resources/e675b3d4b496438bb2ecabd992090415.png" alt="SnakeYAML library in decompiled code">
+        <img src="./config_resources/bcc4541d4520472ea030c74285a1d2a5.png" alt="loadYaml method in code">
+      </div>
+
+      <h2>Vulnerability Details</h2>
+      <p>
+        The version of SnakeYAML used is vulnerable to <a href="https://www.veracode.com/blog/resolving-cve-2022-1471-snakeyaml-20-release-0/" target="_blank">CVE-2022-1471</a>, which allows arbitrary code execution via deserialization.
+      </p>
+      
+      <img src="./config_resources/snakereferecne.png" alt="CVE-2022-1471 reference">
+
+      <h2>Exploitation Steps</h2>
+      <ol>
+        <li>
+          <strong>Reconnaissance:</strong>
+          <ul>
+            <li>App defaults to the Downloads directory for file selection and loading.</li>
+            <li>Decompiled code reveals the use of SnakeYAML and a dangerous <code>LegacyCommandUtil</code> class that executes commands via <code>Runtime.getRuntime().exec(command)</code>.</li>
+          </ul>
+          <div class="image-gallery">
+            <img src="./config_resources/8f18b9df0d7046419c395d0c7f466202.png" alt="App file selection">
+            <img src="./config_resources/b5506237de3f4ecf8ad7b98296fa9f1e.png" alt="LegacyCommandUtil class">
+          </div>
+        </li>
+        
+        <li>
+          <strong>Crafting the Exploit:</strong>
+          <ul>
+            <li>Created a malicious <code>exploit.yaml</code> file to instantiate <code>LegacyCommandUtil</code> with a payload.</li>
+            <li>Pushed the file to the device using <code>adb</code>.</li>
+          </ul>
+          <div class="image-gallery">
+            <img src="./config_resources/8de027f142d14d2e80644e468c7cca4d.png" alt="Crafted exploit.yaml">
+            <img src="./config_resources/27897be8b59b45928d4320a1e5997fe0.png" alt="Pushed exploit to device">
+            <img src="./config_resources/29605f2c02244c2fa6f339b33f4e4b2e.png" alt="Updated exploit for command execution">
+          </div>
+        </li>
+        
+        <li>
+          <strong>Triggering the Vulnerability:</strong>
+          <ul>
+            <li>Loaded the malicious YAML file in the app.</li>
+            <li>The app deserialized the object and executed the command, creating a file in <code>data/data/</code> as proof of code execution.</li>
+          </ul>
+          <img src="./config_resources/24ebed8801b54b11a91277a10217ccf4.png" alt="Proof of exploitation">
+        </li>
+      </ol>
+
+      <div class="success-banner">
+        <i class="fas fa-trophy"></i>
+        <span>RCE Achieved! 🎉</span>
+      </div>
+    </div>
+
+    <div class="writeup-navigation">
+      <a href="../writeups.html" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Writeups
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social-links">
+      <a href="https://github.com/0s3zu4" target="_blank" class="social-link" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank" class="social-link" title="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="https://x.com/__zua" target="_blank" class="social-link" title="X (Twitter)">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+    </div>
+    <p>&copy; 2024 Osezua. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../global.js"></script>
+  <script src="writeups-theme.js"></script>
+</body>
+</html>

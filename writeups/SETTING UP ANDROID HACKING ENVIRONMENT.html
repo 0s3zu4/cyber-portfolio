@@ -2,185 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SETTING UP ANDROID HACKING ENVIRONMENT | d3f4ult</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #101417 0%, #181c20 100%);
-      min-height: 100vh;
-      margin: 0;
-      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
-      color: #e0e0e0;
-      overflow-x: hidden;
-    }
-    .main-container {
-      max-width: 950px;
-      margin: 80px auto 32px auto;
-      background: rgba(24,28,32,0.98);
-      border-radius: 18px;
-      box-shadow: 0 8px 48px #00ffcc22, 0 2px 12px #000a;
-      padding: 48px 32px 36px 32px;
-      position: relative;
-      overflow: hidden;
-    }
-    h1, h2, h3 {
-      color: #00ffcc;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      text-shadow: 0 2px 16px #00ffcc33;
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.2em;
-      margin-bottom: 0.6em;
-    }
-    h2 {
-      margin-top: 2em;
-      margin-bottom: 0.7em;
-      font-size: 1.4em;
-      border-left: 4px solid #00ffcc;
-      padding-left: 0.5em;
-      letter-spacing: 0.02em;
-      background: linear-gradient(90deg, #00ffcc11 60%, #1abc9c09 100%);
-      border-radius: 4px;
-      box-shadow: 0 1px 8px #00ffcc11;
-    }
-    h3 {
-      margin-top: 1.5em;
-      margin-bottom: 0.5em;
-      font-size: 1.1em;
-      color: #1abc9c;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-    }
-    .intro-large {
-      text-align: center;
-      font-size: 1.25em;
-      color: #e0e0e0;
-      margin-bottom: 2em;
-      line-height: 1.7;
-      font-weight: 500;
-    }
-    ul, ol {
-      margin-left: 2em;
-      margin-bottom: 1.5em;
-      font-size: 1.07em;
-      padding-left: 0;
-    }
-    li {
-      margin-bottom: 0.7em;
-      line-height: 1.7;
-      list-style-position: outside;
-    }
-    .img-center {
-      display: block;
-      margin: 16px auto 16px auto;
-      max-width: 90%;
-      border: 1px solid #23272e;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px #00ffcc22;
-    }
-    pre, code {
-      background: #23272e;
-      color: #00ffcc;
-      border-radius: 6px;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-    }
-    pre {
-      padding: 1em;
-      overflow-x: auto;
-      font-size: 1.08em;
-      margin-bottom: 1em;
-      box-shadow: 0 2px 12px #00ffcc22;
-      border: 1px solid #23272e;
-    }
-    code {
-      padding: 0.2em 0.4em;
-      font-size: 1.08em;
-    }
-    a {
-      color: #00ffcc;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    a:hover {
-      color: #1abc9c;
-      text-decoration: underline;
-    }
-    hr {
-      margin: 2rem 0;
-      border: none;
-      border-bottom: 2px solid #00ffcc33;
-    }
-    .writeup-link {
-      display: inline-block;
-      margin-top: 2em;
-      color: #00ffcc;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1em;
-      border-radius: 6px;
-      padding: 10px 22px;
-      background: #23272e;
-      transition: background 0.15s, color 0.15s;
-      border: 1px solid #23272e;
-      box-shadow: 0 1px 8px #00ffcc33;
-    }
-    .writeup-link:hover {
-      background: #00ffcc;
-      color: #181c20;
-      border-color: #00ffcc;
-    }
-    .navbar {
-      width: 100vw;
-      background: #181c20;
-      box-shadow: 0 2px 16px #00ffcc22;
-      position: fixed;
-      top: 0; left: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 56px;
-      padding: 0 2vw;
-    }
-    .navbar-links {
-      display: flex;
-      gap: 36px;
-    }
-    .navbar-link {
-      color: #00ffcc;
-      text-decoration: none;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      font-size: 1.13em;
-      font-weight: bold;
-      letter-spacing: 0.02em;
-      padding: 8px 18px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .navbar-link:hover {
-      background: #00ffcc;
-      color: #181c20;
-    }
-    @media (max-width: 700px) {
-      .main-container { margin-top: 64px; padding: 18px 2vw; }
-      .intro-large { font-size: 1.08em; }
-      pre, code { font-size: 1em; }
-      .navbar-links { gap: 18px; }
-      .navbar { height: 48px; }
-      .img-center { max-width: 100%; }
-    }
-  </style>
+  <title>ANDRIOD ENV SET_UP</title>
+  <link rel="stylesheet" href="writeups-theme.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-links">
-      <a class="navbar-link" href="../index.html">Home</a>
-      <a class="navbar-link" href="../writeups.html">Write-ups</a>
-      <a class="navbar-link" href="../projects.html">Projects</a>
-    </div>
+<canvas id="matrix"></canvas>
+
+<header class="brand-header">
+  <div class="brand-logo-wrap">
+    <img src="../images/pp.jpeg" alt="Osezua's photo" class="brand-logo-img">
+    <span class="brand-title">writeups - osezua</span>
+  </div>
+</header>
+
+<!-- Nano Navbar (no dropdowns, with Home button as image) -->
+  <nav class="nano-navbar" id="nanoNav">
+    <a href="index.html" class="nano-nav-btn" title="Home">
+      <i class="fas fa-home"></i>
+    </a>
+    <a href="../writeups.html" class="nano-nav-btn">Writeups</a>
+    <a href="../projects.html" class="nano-nav-btn">Projects</a>
   </nav>
-  <div class="main-container">
+
+<!-- Side Panel -->
+<aside class="side-panel">
+  <div class="side-panel-title">Categories</div>
+  <div class="side-panel-link" data-panel="web">Web <i class="fas fa-caret-down"></i></div>
+  <div class="side-panel-dropdown" id="panel-web">
+    <a href="../writeups.html#web-sqli">SQL Injection in Login Portal</a>
+    <a href="../writeups.html#web-xss">XSS in Feedback Form</a>
+  </div>
+  <div class="side-panel-link" data-panel="mobile">Mobile <i class="fas fa-caret-down"></i></div>
+  <div class="side-panel-dropdown" id="panel-mobile">
+    <a href="./SETTING UP ANDROID HACKING ENVIRONMENT.html">SETTING UP ANDROID HACKING ENVIRONMENT</a>
+    <a href="../writeups/MHL_Cyclicscanner.html">MHL CyclicScanner</a>
+    <a href="../writeups/MHL_IOTConnect.html">MHL IOT Connect</a>
+    <a href="../writeups/MHL_Strings.html">MHL Strings</a>
+    <a href="../writeups/HACKING LABS-CONFIG EDITOR.html">Config Editor</a>
+  </div>
+  <div class="side-panel-link" data-panel="api">API <i class="fas fa-caret-down"></i></div>
+  <div class="side-panel-dropdown" id="panel-api">
+    <a href="../writeups/vAPI.html">vAPI Walkthrough</a>
+  </div>
+</aside>
+
+<main class="writeup-plain">
     <h1>SETTING UP ANDROID HACKING ENVIRONMENT</h1>
     <div class="intro-large">
       A practical guide to building a modern Android pentesting lab: emulators, root, Magisk, Burp Suite, and more.
@@ -431,5 +298,15 @@ su
 	</p>
     <a class="writeup-link" href="../index.html">← Back to Portfolio</a>
   </div>
+  </main>
+
+  <footer class="footer-socials">
+  <div>
+    <a href="https://github.com/0s3zu4" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://x.com/__zua" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
+  </div>
+</footer>
+<script src="writeups-theme.js"></script>
 </body>
 </html>

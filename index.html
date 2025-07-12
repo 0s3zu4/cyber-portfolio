@@ -2,458 +2,215 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>d3f4ult | Cybersecurity Portfolio</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #101417 0%, #181c20 100%);
-      min-height: 100vh;
-      margin: 0;
-      font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
-      color: #e0e0e0;
-      overflow-x: hidden;
-    }
-    .navbar {
-      width: 100vw;
-      background: rgba(16, 20, 23, 0.98);
-      box-shadow: 0 2px 16px #00ffcc22;
-      position: fixed;
-      top: 0; left: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 56px;
-      padding: 0 2vw;
-    }
-    .navbar-links {
-      display: flex;
-      gap: 36px;
-    }
-    .navbar-link {
-      color: #00ffcc;
-      text-decoration: none;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      font-size: 1.13em;
-      font-weight: bold;
-      letter-spacing: 0.02em;
-      padding: 8px 18px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .navbar-link:hover {
-      background: #00ffcc;
-      color: #181c20;
-    }
-    .main-container {
-      max-width: 950px;
-      margin: 48px auto 32px auto;
-      background: rgba(24,28,32,0.98);
-      border-radius: 18px;
-      box-shadow: 0 8px 48px #00ffcc22, 0 2px 12px #000a;
-      padding: 48px 32px 36px 32px;
-      position: relative;
-      overflow: hidden;
-      margin-top: 80px; /* Add space for navbar */
-    }
-    .avatar {
-      display: block;
-      margin: 0 auto 18px auto;
-      border-radius: 50%;
-      width: 120px;
-      box-shadow: 0 2px 18px #00ffcc55;
-      border: 4px solid #00ffcc77;
-      transition: transform 0.2s;
-    }
-    .avatar:hover {
-      transform: scale(1.07) rotate(-3deg);
-      box-shadow: 0 4px 32px #00ffcc99;
-    }
-    h1 {
-      color: #00ffcc;
-      text-align: center;
-      font-size: 2.7em;
-      margin-bottom: 0.2em;
-      letter-spacing: 0.04em;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      text-shadow: 0 2px 16px #00ffcc33;
-      animation: fadeInDown 1s;
-    }
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-40px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    .intro {
-      text-align: center;
-      font-size: 1.18em;
-      color: #e0e0e0;
-      margin-bottom: 1.7em;
-      animation: fadeIn 1.2s;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0;}
-      to { opacity: 1;}
-    }
-    .highlight {
-      color: #00ffcc;
-      font-weight: bold;
-      background: linear-gradient(90deg, #00ffcc44 60%, #1abc9c22 100%);
-      border-radius: 6px;
-      padding: 0 6px;
-    }
-    .section-divider {
-      border: none;
-      border-bottom: 2px solid #00ffcc33;
-      margin: 2.5em 0 2em 0;
-    }
-    h2 {
-      color: #1abc9c;
-      margin-top: 2em;
-      margin-bottom: 0.7em;
-      font-size: 1.4em;
-      border-left: 4px solid #00ffcc;
-      padding-left: 0.5em;
-      letter-spacing: 0.02em;
-      background: linear-gradient(90deg, #00ffcc11 60%, #1abc9c09 100%);
-      border-radius: 4px;
-      box-shadow: 0 1px 8px #00ffcc11;
-    }
-    ul, ol {
-      margin-left: 1.5em;
-      margin-bottom: 1.5em;
-      font-size: 1.07em;
-    }
-    li {
-      margin-bottom: 0.5em;
-    }
-    .credly-card {
-      display: flex;
-      align-items: center;
-      background: linear-gradient(90deg, #23272e 80%, #00ffcc11 100%);
-      border-radius: 12px;
-      box-shadow: 0 2px 12px #00ffcc22;
-      padding: 18px 22px;
-      margin: 22px 0 32px 0;
-      max-width: 440px;
-      gap: 18px;
-      animation: fadeIn 1.5s;
-    }
-    .credly-card img {
-      width: 60px;
-      height: 60px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px #00ffcc44;
-      background: #fff;
-    }
-    .credly-card .credly-info {
-      flex: 1;
-    }
-    .credly-card .credly-title {
-      color: #00ffcc;
-      font-weight: bold;
-      font-size: 1.13em;
-      margin-bottom: 4px;
-    }
-    .credly-card .credly-desc {
-      color: #b0b0b0;
-      font-size: 0.99em;
-      margin-bottom: 8px;
-    }
-    .credly-card .credly-link {
-      display: inline-block;
-      background: #00ffcc;
-      color: #181c20;
-      font-weight: bold;
-      padding: 7px 18px;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: background 0.15s, color 0.15s;
-      font-size: 1em;
-      box-shadow: 0 1px 8px #00ffcc33;
-    }
-    .credly-card .credly-link:hover {
-      background: #1abc9c;
-      color: #fff;
-    }
-    .writeup-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 28px;
-      justify-content: center;
-      margin: 32px 0 0 0;
-      animation: fadeIn 1.5s;
-    }
-    .writeup-card {
-      background: linear-gradient(120deg, #23272e 80%, #00ffcc11 100%);
-      border-radius: 12px;
-      box-shadow: 0 2px 12px #00ffcc22;
-      padding: 26px 22px 20px 22px;
-      width: 300px;
-      min-height: 140px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1.5px solid #23272e;
-      transition: transform 0.18s, box-shadow 0.18s, border 0.18s;
-      position: relative;
-      overflow: hidden;
-    }
-    .writeup-card:before {
-      content: '';
-      position: absolute;
-      top: -40px; left: -40px;
-      width: 80px; height: 80px;
-      background: radial-gradient(circle, #00ffcc33 0%, transparent 70%);
-      z-index: 0;
-    }
-    .writeup-card:hover {
-      transform: translateY(-8px) scale(1.04);
-      box-shadow: 0 8px 32px #00ffcc33;
-      border-color: #00ffcc;
-    }
-    .writeup-title {
-      color: #00ffcc;
-      font-size: 1.18em;
-      font-weight: bold;
-      margin-bottom: 0.4em;
-      text-decoration: none;
-      transition: color 0.15s;
-      z-index: 1;
-      position: relative;
-    }
-    .writeup-card:hover .writeup-title {
-      color: #1abc9c;
-    }
-    .writeup-desc {
-      color: #b0b0b0;
-      font-size: 1em;
-      margin-bottom: 1em;
-      min-height: 48px;
-      z-index: 1;
-      position: relative;
-    }
-    .writeup-link {
-      margin-top: auto;
-      align-self: flex-end;
-      color: #00ffcc;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1em;
-      border-radius: 6px;
-      padding: 6px 16px;
-      background: #181c20;
-      transition: background 0.15s, color 0.15s;
-      border: 1px solid #23272e;
-      z-index: 1;
-      position: relative;
-    }
-    .writeup-link:hover {
-      background: #00ffcc;
-      color: #181c20;
-      border-color: #00ffcc;
-    }
-    .section-divider {
-      border: none;
-      border-bottom: 2px solid #00ffcc33;
-      margin: 2.5em 0 2em 0;
-    }
-    .social-links {
-      text-align: center;
-      margin-top: 2.5em;
-      animation: fadeIn 2s;
-    }
-    .social-links a {
-      color: #00ffcc;
-      margin: 0 12px;
-      font-size: 1.2em;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.15s;
-      letter-spacing: 0.02em;
-    }
-    .social-links a:hover {
-      color: #1abc9c;
-      text-decoration: underline;
-    }
-    .typewriter {
-      display: inline-block;
-      border-right: 2px solid #00ffcc;
-      white-space: nowrap;
-      overflow: hidden;
-      animation: typing 2.2s steps(30, end), blink-caret .75s step-end infinite;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      color: #00ffcc;
-      font-size: 1.15em;
-      margin: 0 0 0 4px;
-    }
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: #00ffcc; }
-    }
-    /* Responsive */
-    @media (max-width: 700px) {
-      .navbar-links { gap: 18px; }
-      .navbar { height: 48px; }
-      .main-container { margin-top: 64px; padding: 18px 2vw; }
-      .writeup-links { flex-direction: column; gap: 16px; }
-      .writeup-card { width: 98%; }
-      .credly-card { max-width: 98vw; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Osezua | Cybersecurity Portfolio</title>
+  <meta name="description" content="Cybersecurity professional specializing in penetration testing, vulnerability assessment, and security research.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="global.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-links">
-      <a class="navbar-link" href="index.html">Home</a>
-      <a class="navbar-link" href="writeups.html">Write-ups</a>
-      <a class="navbar-link" href="projects.html">Projects</a>
-    </div>
-  </nav>
-  <div class="main-container">
-    <img src="images/pp.jpeg" alt="d3f4ult avatar" class="avatar">
+  <!-- Matrix Background -->
+  <canvas id="matrix"></canvas>
 
-    <h1>
-      Hi, I'm <span class="highlight">Osezua</span>
-    </h1>
-    <div style="text-align:center; margin-bottom: 1.2em;">
-      <span class="typewriter" id="typewriter"></span>
-    </div>
-    <div class="intro">
-      I’m a passionate <span class="highlight">Cybersecurity Analyst</span> focused on <strong>offensive security</strong>, <strong>web/API/mobile hacking</strong>.<br>
-      I love breaking things, learning, and sharing knowledge through hands-on labs and detailed write-ups.
-    </div>
-
-    <h2>👤 Who Am I?</h2>
-    <p>
-      I’m <strong>osezua Agboifoh</strong>, a driven and curious cybersecurity analyst with a deep passion for ethical hacking and digital defense. 
-      My journey is rooted in a strong desire to understand how modern systems are attacked and more importantly, how to defend them. 
-      I enjoy dissecting the logic behind exploits, reverse engineering mobile apps, and breaking APIs to better secure them.
-    </p>
-    <p>
-      I approach cybersecurity like a puzzle, each vulnerability is a challenge to uncover, and each fix is a step toward stronger infrastructure.
-      Whether I'm intercepting API traffic with Burp Suite, reverse engineering Android apps with Frida and Drozer, or building vulnerable labs to learn offensive tactics, I believe that hands-on learning is the most powerful teacher.
-    </p>
-
-    <h2>🛠️ Interests & Core Skills</h2>
-    <ul>
-      <li><strong>🔍 Ethical Hacking:</strong> Penetration testing, vulnerability assessments, and red teaming simulations to identify real-world risks.</li>
-      <li><strong>📲 Mobile Application Security:</strong> Android reverse engineering, dynamic analysis with Frida, Drozer, APKTool, and uncovering insecure components in apps.</li>
-      <li><strong>🔗 API Security:</strong> Manual exploitation of REST APIs following OWASP API Top 10, including authentication bypass, BOLA, and mass assignment vulnerabilities.</li>
-      <li><strong>💥 Threat Analysis:</strong> Researching and reproducing attack vectors like XSS, SQLi, CSRF, IDOR, and SSRF across web and API layers.</li>
-      <li><strong>🔐 Password Security:</strong> Password hashing, cracking tools, brute-force techniques, and securing authentication flows.</li>
-      <li><strong>⚙️ Hands-On Practice:</strong> Active in CTF platforms, Android security labs, API security simulators, and custom Docker-based testbeds for security testing.</li>
-      <li><strong>🧪 Offensive Security Mindset:</strong> Constantly learning how attackers operate, including exploit chains, privilege escalation, and misconfigurations.</li>
-    </ul>
-
-    <h2>🔐 What I Do</h2>
-    <ul>
-      <li>Manual API testing (OWASP API Top 10, Postman, Burp Suite)</li>
-      <li>Web Penetration testing</li>
-      <li>Reverse engineering Android apps (Frida, Drozer, MobSF, JADX, APKTool)</li>
-      <li>Building intentionally vulnerable apps and APIs for learning</li>
-      <li>Developing secure APIs (OAuth 2.0, JWT, API Gateways, Docker)</li>
-      <li>Writing detailed exploit write-ups and documentation</li>
-    </ul>
-
-    <h2>📜 Certifications & Courses</h2>
-    <ul>
-      <li>APIsec University - Certified Practitioner (ACP)</li>
-      <li>Certified Mobile Pentester - Android (CMPen-Android)</li>
-      <li>ISC2 Certified in Cybersecurity (ISC2 CC)</li>
-      <li>Cisco Netacad Junior Cybersecurity Path</li>
-      <li>Mobile Hacking Labs (Frida, Drozer, APKTool)</li>
-    </ul>
-    <div class="credly-card">
-      <img src="images/creadly.png" alt="Credly Badge">
-      <div class="credly-info">
-        <div class="credly-title">My Verified Badges & Certificates</div>
-        <div class="credly-desc">
-          Explore my latest certifications and digital badges on Credly.
-        </div>
-        <a class="credly-link" href="https://www.credly.com/users/osezua-agboifoh" target="_blank">
-          View on Credly →
-        </a>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">
+        <img src="images/pp.jpeg" alt="Osezua">
+        <span>Osezua</span>
+      </a>
+      
+      <nav class="nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="writeups.html" class="nav-link">Writeups</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </nav>
+      
+      <div class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
     </div>
+  </header>
 
-    <hr class="section-divider">
-
-    <h2>🚩 Featured Write-ups</h2>
-    <div class="writeup-links">
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/MHL_Strings.html">Mobile Hacking Labs: STRINGS</a>
-        <div class="writeup-desc">
-          Reverse engineering and dynamic analysis to retrieve a hidden flag from an Android app using Frida, Fridump, and static analysis tools.
-        </div>
-        <a class="writeup-link" href="writeups/MHL_Strings.html">Read Write-up →</a>
-      </div>
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/MHL_Cyclicscanner.html">Mobile Hacking Labs: CyclicScanner RCE</a>
-        <div class="writeup-desc">
-          Exploiting a command injection vulnerability in the CyclicScanner app to achieve remote code execution via malicious filenames.
-        </div>
-        <a class="writeup-link" href="writeups/MHL_Cyclicscanner.html">Read Write-up →</a>
-      </div>
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups/MHL_IOTConnect.html">Mobile Hacking Labs: IOT CONNECT</a>
-        <div class="writeup-desc">
-          Exploiting insecure broadcast receivers in an IoT control app to gain unauthorized access and control over connected devices.
-        </div>
-        <a class="writeup-link" href="writeups/MHL_IOTConnect.html">Read Write-up →</a>
-      </div>
-      <div class="writeup-card">
-        <a class="writeup-title" href="writeups.html">All Cybersecurity Write-ups</a>
-        <div class="writeup-desc">
-          Browse the full list of my hands-on labs, exploit write-ups, and technical notes.
-        </div>
-        <a class="writeup-link" href="writeups.html">See All Write-ups →</a>
-      </div>
-    </div>
-
-    <hr class="section-divider">
-
-    <div class="social-links">
-      <a href="mailto:agboifohosezua@outlook.com">Email</a>
-      <a href="https://github.com/0s3zu4" target="_blank">GitHub</a>
-      <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank">LinkedIn</a>
-      <a href="https://x.com/__zua" target="_blank">X (Twitter)</a>
-    </div>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="index.html" class="mobile-nav-link">Home</a>
+      <a href="writeups.html" class="mobile-nav-link">Writeups</a>
+      <a href="projects.html" class="mobile-nav-link">Projects</a>
+    </nav>
   </div>
-  <script>
-    // Typewriter effect for dynamic intro
-    const words = [
-      "Mobile Penetration Tester",
-      "API Security Enthusiast",
-      "Reverse Engineer",
-      "Penetration Tester",
-        "Web App Exploiter",
-    ];
-    let i = 0, j = 0, isDeleting = false, current = '', typeSpeed = 90, pause = 1200;
-    const tw = document.getElementById('typewriter');
-    function typeLoop() {
-      if (!tw) return;
-      if (!isDeleting && j <= words[i].length) {
-        current = words[i].substring(0, j++);
-        tw.textContent = current;
-        setTimeout(typeLoop, typeSpeed);
-      } else if (isDeleting && j >= 0) {
-        current = words[i].substring(0, j--);
-        tw.textContent = current;
-        setTimeout(typeLoop, typeSpeed / 2);
-      } else if (!isDeleting) {
-        isDeleting = true;
-        setTimeout(typeLoop, pause);
-      } else {
-        isDeleting = false;
-        i = (i + 1) % words.length;
-        setTimeout(typeLoop, 500);
-      }
-    }
-    typeLoop();
-  </script>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Hero Section -->
+    <section class="hero fade-in">
+      <div class="hero-content">
+        <h1>Cybersecurity Professional</h1>
+        <p class="hero-subtitle">
+          Penetration Tester | Security Researcher | Bug Hunter
+        </p>
+        <p class="hero-description">
+          Passionate about discovering vulnerabilities, securing systems, and sharing knowledge through detailed writeups and research.
+        </p>
+        <div class="hero-actions">
+          <a href="writeups.html" class="btn">
+            <i class="fas fa-book"></i>
+            View Writeups
+          </a>
+          <a href="projects.html" class="btn btn-secondary">
+            <i class="fas fa-code"></i>
+            My Projects
+          </a>
+        </div>
+      </div>
+      
+      <div class="hero-image">
+        <img src="images/pp.jpeg" alt="Osezua" class="profile-image">
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section mt-4">
+      <h2>Skills & Expertise</h2>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Penetration Testing</h3>
+          <p>Web, mobile, and network penetration testing with hands-on experience in real-world scenarios.</p>
+          <div class="tags">
+            <span class="tag">OWASP</span>
+            <span class="tag">Burp Suite</span>
+            <span class="tag">Nmap</span>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3>Mobile Security</h3>
+          <p>Android and iOS application security assessment, reverse engineering, and vulnerability analysis.</p>
+          <div class="tags">
+            <span class="tag">Android</span>
+            <span class="tag">Frida</span>
+            <span class="tag">APK Analysis</span>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <h3>Security Research</h3>
+          <p>Vulnerability research, exploit development, and contributing to the security community.</p>
+          <div class="tags">
+            <span class="tag">Exploit Dev</span>
+            <span class="tag">Research</span>
+            <span class="tag">CVE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="certifications-section mt-4">
+      <h2>Certifications</h2>
+      <div class="certifications-grid">
+        <div class="certification-card">
+          <img src="images/cc.png" alt="CompTIA Security+" class="cert-logo">
+          <div class="cert-info">
+            <h3>CompTIA Security+</h3>
+            <p>Validated cybersecurity skills and knowledge</p>
+          </div>
+        </div>
+        
+        <div class="certification-card">
+          <img src="images/apisec.png" alt="API Security" class="cert-logo">
+          <div class="cert-info">
+            <h3>API Security</h3>
+            <p>Specialized in API security testing and assessment</p>
+          </div>
+        </div>
+        
+        <div class="certification-card">
+          <img src="images/creadly.png" alt="Credly Badge" class="cert-logo">
+          <div class="cert-info">
+            <h3>Credly Verified</h3>
+            <p>Digital credentials and achievements</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Work Section -->
+    <section class="recent-work-section mt-4">
+      <h2>Recent Work</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Mobile Hacking Labs</h3>
+          <p>Comprehensive writeups covering various mobile security challenges including RCE, command injection, and configuration vulnerabilities.</p>
+          <div class="tags">
+            <span class="tag">Mobile</span>
+            <span class="tag">RCE</span>
+            <span class="tag">Android</span>
+          </div>
+          <a href="writeups.html" class="btn btn-secondary mt-2">
+            <i class="fas fa-arrow-right"></i>
+            View Writeups
+          </a>
+        </div>
+        
+        <div class="card">
+          <h3>vAPI Walkthrough</h3>
+          <p>Detailed analysis of API security vulnerabilities and exploitation techniques in the vAPI lab environment.</p>
+          <div class="tags">
+            <span class="tag">API</span>
+            <span class="tag">Web</span>
+            <span class="tag">Security</span>
+          </div>
+          <a href="writeups/vAPI.html" class="btn btn-secondary mt-2">
+            <i class="fas fa-arrow-right"></i>
+            Read More
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social-links">
+      <a href="https://github.com/0s3zu4" target="_blank" class="social-link" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank" class="social-link" title="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="https://x.com/__zua" target="_blank" class="social-link" title="X (Twitter)">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+    </div>
+    <p>&copy; 2024 Osezua. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="global.js"></script>
 </body>
 </html>
