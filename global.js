@@ -67,6 +67,107 @@ class MobileMenu {
   }
 }
 
+// Mobile Side Panel Management
+class MobileSidePanel {
+  constructor() {
+    this.toggleButton = document.querySelector('.side-panel-toggle');
+    this.sidePanel = document.querySelector('.side-panel');
+    this.overlay = document.querySelector('.side-panel-overlay');
+    this.init();
+  }
+
+  init() {
+    if (this.toggleButton && this.sidePanel) {
+      this.toggleButton.addEventListener('click', () => this.toggle());
+      
+      // Close panel when clicking overlay
+      if (this.overlay) {
+        this.overlay.addEventListener('click', () => this.close());
+      }
+
+      // Close panel when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!this.toggleButton.contains(e.target) && 
+            !this.sidePanel.contains(e.target) && 
+            this.sidePanel.classList.contains('active')) {
+          this.close();
+        }
+      });
+
+      // Close panel on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.sidePanel.classList.contains('active')) {
+          this.close();
+        }
+      });
+
+      // Initialize side panel dropdowns
+      this.initDropdowns();
+    }
+  }
+
+  initDropdowns() {
+    const sidePanelLinks = document.querySelectorAll('.side-panel-link');
+    
+    sidePanelLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Close other open dropdowns
+        sidePanelLinks.forEach(l => {
+          if (l !== link) {
+            l.classList.remove('open');
+          }
+        });
+        
+        // Toggle current dropdown
+        link.classList.toggle('open');
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.side-panel')) {
+        sidePanelLinks.forEach(link => {
+          link.classList.remove('open');
+        });
+      }
+    });
+
+    // Highlight active page in side panel
+    const currentPath = window.location.pathname;
+    const sidePanelDropdownLinks = document.querySelectorAll('.side-panel-dropdown a');
+    
+    sidePanelDropdownLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && currentPath.includes(href.replace('./', ''))) {
+        link.classList.add('active');
+        // Open the parent dropdown
+        const parentLink = link.closest('.side-panel-dropdown').previousElementSibling;
+        if (parentLink) {
+          parentLink.classList.add('open');
+        }
+      }
+    });
+  }
+
+  toggle() {
+    this.sidePanel.classList.toggle('active');
+    this.toggleButton.classList.toggle('active');
+    if (this.overlay) {
+      this.overlay.classList.toggle('active');
+    }
+  }
+
+  close() {
+    this.sidePanel.classList.remove('active');
+    this.toggleButton.classList.remove('active');
+    if (this.overlay) {
+      this.overlay.classList.remove('active');
+    }
+  }
+}
+
 
 
 // Smooth Scrolling
@@ -150,6 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize mobile menu
   new MobileMenu();
 
+  // Initialize mobile side panel
+  new MobileSidePanel();
 
 
   // Initialize smooth scrolling
