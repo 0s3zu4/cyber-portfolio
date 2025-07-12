@@ -2,200 +2,214 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>vAPI Walkthrough and Documentation</title>
-  <link rel="stylesheet" href="writeups-theme.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vAPI Walkthrough | Osezua</title>
+  <meta name="description" content="Comprehensive vAPI challenge walkthrough covering OWASP API Security Top 10 vulnerabilities">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="../global.css">
+  <link rel="stylesheet" href="writeups-theme.css">
 </head>
 <body>
-<canvas id="matrix"></canvas>
+  <!-- Matrix Background -->
+  <canvas id="matrix"></canvas>
 
-<header class="brand-header">
-  <div class="brand-logo-wrap">
-    <img src="../images/pp.jpeg" alt="Osezua's photo" class="brand-logo-img">
-    <span class="brand-title">writeups - osezua</span>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">
+        <img src="../images/pp.jpeg" alt="Osezua">
+        <span>Osezua</span>
+      </a>
+      
+      <nav class="nav">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../writeups.html" class="nav-link">Writeups</a>
+        <a href="../projects.html" class="nav-link">Projects</a>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </nav>
+      
+      <div class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <nav class="mobile-nav">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="../writeups.html" class="mobile-nav-link">Writeups</a>
+      <a href="../projects.html" class="mobile-nav-link">Projects</a>
+    </nav>
   </div>
-</header>
 
-<nav class="nano-navbar" id="nanoNav">
-  <a href="../index.html" class="nano-nav-btn" title="Home">
-    <i class="fas fa-home"></i>
-  </a>
-  <a href="../writeups.html" class="nano-nav-btn">Writeups</a>
-  <a href="../projects.html" class="nano-nav-btn">Projects</a>
-</nav>
+  <!-- Side Panel -->
+  <aside class="side-panel">
+    <div class="side-panel-title">Categories</div>
+    <div class="side-panel-link" data-panel="web">Web <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-web">
+      <a href="../writeups.html#web-sqli">SQL Injection in Login Portal</a>
+      <a href="../writeups.html#web-xss">XSS in Feedback Form</a>
+    </div>
+    <div class="side-panel-link" data-panel="mobile">Mobile <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-mobile">
+      <a href="./SETTING UP ANDROID HACKING ENVIRONMENT.html">SETTING UP ANDROID HACKING ENVIRONMENT</a>
+      <a href="./MHL_Cyclicscanner.html">MHL CyclicScanner</a>
+      <a href="./MHL_IOTConnect.html">MHL IOT Connect</a>
+      <a href="./MHL_Strings.html">MHL Strings</a>
+      <a href="./HACKING LABS-CONFIG EDITOR.html">Config Editor</a>
+    </div>
+    <div class="side-panel-link" data-panel="api">API <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-api">
+      <a href="./vAPI.html">vAPI Walkthrough</a>
+    </div>
+  </aside>
 
-<aside class="side-panel">
-  <div class="side-panel-title">Categories</div>
-  <div class="side-panel-link" data-panel="web">Web <i class="fas fa-caret-down"></i></div>
-  <div class="side-panel-dropdown" id="panel-web">
-    <a href="../writeups.html#web-sqli">SQL Injection in Login Portal</a>
-    <a href="../writeups.html#web-xss">XSS in Feedback Form</a>
-  </div>
-  <div class="side-panel-link" data-panel="mobile">Mobile <i class="fas fa-caret-down"></i></div>
-  <div class="side-panel-dropdown" id="panel-mobile">
-    <a href="./SETTING UP ANDROID HACKING ENVIRONMENT.html">SETTING UP ANDROID HACKING ENVIRONMENT</a>
-    <a href="../writeups/MHL_Cyclicscanner.html">MHL CyclicScanner</a>
-    <a href="../writeups/MHL_IOTConnect.html">MHL IOT Connect</a>
-    <a href="../writeups/MHL_Strings.html">MHL Strings</a>
-    <a href="../writeups/HACKING LABS-CONFIG EDITOR.html">Config Editor</a>
-  </div>
-  <div class="side-panel-link" data-panel="api">API <i class="fas fa-caret-down"></i></div>
-  <div class="side-panel-dropdown" id="panel-api">
-    <a href="../writeups/vAPI.html">vAPI Walkthrough</a>
-  </div>
-</aside>
+  <!-- Main Content -->
+  <main class="writeup-plain">
+    <div class="writeup-header">
+      <h1>vAPI Walkthrough & Documentation</h1>
+      <div class="writeup-meta">
+        <span class="tag">API Security</span>
+        <span class="tag">OWASP Top 10</span>
+        <span class="tag">Web Security</span>
+      </div>
+    </div>
 
-<main class="writeup-plain">
-  <h1>vAPI Walkthrough & Documentation</h1>
-  <p>
-    <span class="step">Summary:</span> This writeup covers the exploitation of multiple API vulnerabilities in the vAPI challenge, mapped to the OWASP API Security Top 10. Each section demonstrates a real-world API flaw, exploitation steps, and key takeaways for secure API design.
-  </p>
+    <div class="writeup-content">
+      <div class="intro-large">
+        Comprehensive walkthrough of the vAPI challenge covering exploitation of multiple API vulnerabilities mapped to the OWASP API Security Top 10.
+      </div>
 
-  <h2 id="api1">API1: Broken Object Level Authorization (BOLA)</h2>
-  <p>
-    BOLA occurs when APIs fail to enforce proper authorization checks, allowing attackers to access or modify resources they do not own. In vAPI, predictable user IDs enabled access to other users' data.
-  </p>
-  <img src="./vapi_resources/387101d41f894a61a0423984f9222896.png" alt="User registration">
-  <pre><code>GET http://{{host}}/vapi/api1/user/{id}</code></pre>
-  <img src="./vapi_resources/575fe068af13430a9a9ac1b172ddf18e.png" alt="Accessing other users">
-  <img src="./vapi_resources/84c969b9fd3046748468a69a200c524c.png" alt="Flag for user 1">
-  <p>
-    <strong>Key Takeaway:</strong> Always verify object ownership before returning or modifying data. Do not rely solely on predictable IDs.
-  </p>
+      <div class="challenge-info">
+        <h3>Summary</h3>
+        <p>This writeup covers the exploitation of multiple API vulnerabilities in the vAPI challenge, mapped to the OWASP API Security Top 10. Each section demonstrates a real-world API flaw, exploitation steps, and key takeaways for secure API design.</p>
+      </div>
 
-  <h2 id="api2">API2: Broken Authentication</h2>
-  <p>
-    Weak authentication allows attackers to compromise accounts. Here, credentials were found in a resource file and brute-forced using Burp Suite Intruder.
-  </p>
-  <img src="./vapi_resources/2877593bc93a477291eabafa202650ec.png" alt="creds.csv">
-  <pre><code>awk -F',' '{print $1 > "emails.txt"; print $2 > "passwords.txt"}' creds.csv</code></pre>
-  <img src="./vapi_resources/eb84c68f3e47407c9997d7ab98852897.png" alt="Burp Intruder brute force">
-  <img src="./vapi_resources/00821815e5654a4b8e186056ca66d7a1.png" alt="Valid credentials found">
-  <img src="./vapi_resources/93f0b08b2da549feb81faa54c585d090.png" alt="Accessing user details">
-  <p>
-    <strong>Key Takeaway:</strong> Enforce strong authentication, rate limiting, and never expose credentials in public resources.
-  </p>
+      <h2 id="api1">API1: Broken Object Level Authorization (BOLA)</h2>
+      <p>BOLA occurs when APIs fail to enforce proper authorization checks, allowing attackers to access or modify resources they do not own. In vAPI, predictable user IDs enabled access to other users' data.</p>
+      <img src="./vapi_resources/387101d41f894a61a0423984f9222896.png" alt="User registration">
+      <pre><code>GET http://{{host}}/vapi/api1/user/{id}</code></pre>
+      <img src="./vapi_resources/575fe068af13430a9a9ac1b172ddf18e.png" alt="Accessing other users">
+      <img src="./vapi_resources/84c969b9fd3046748468a69a200c524c.png" alt="Flag for user 1">
+      <p><strong>Key Takeaway:</strong> Always verify object ownership before returning or modifying data. Do not rely solely on predictable IDs.</p>
 
-  <h2 id="api3">API3: Excessive Data Exposure & Mass Assignment</h2>
-  <p>
-    APIs should only return necessary data. Here, sensitive fields like flags and location were exposed in API responses. Mass assignment allowed attackers to set unauthorized fields.
-  </p>
-  <img src="./vapi_resources/1ef2f9da44d64295820a21b5bfbe19cc.png" alt="Excessive data exposure">
-  <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="Mass assignment exploit">
-  <p>
-    <strong>Key Takeaway:</strong> Filter response data server-side and use allowlists for accepted input fields.
-  </p>
+      <h2 id="api2">API2: Broken Authentication</h2>
+      <p>Weak authentication allows attackers to compromise accounts. Here, credentials were found in a resource file and brute-forced using Burp Suite Intruder.</p>
+      <img src="./vapi_resources/2877593bc93a477291eabafa202650ec.png" alt="creds.csv">
+      <pre><code>awk -F',' '{print $1 > "emails.txt"; print $2 > "passwords.txt"}' creds.csv</code></pre>
+      <img src="./vapi_resources/eb84c68f3e47407c9997d7ab98852897.png" alt="Burp Intruder brute force">
+      <img src="./vapi_resources/00821815e5654a4b8e186056ca66d7a1.png" alt="Valid credentials found">
+      <img src="./vapi_resources/93f0b08b2da549feb81faa54c585d090.png" alt="Accessing user details">
+      <p><strong>Key Takeaway:</strong> Enforce strong authentication, rate limiting, and never expose credentials in public resources.</p>
 
-  <h2 id="api4">API4: Lack of Resources & Rate Limiting</h2>
-  <p>
-    Without rate limiting, APIs are vulnerable to brute force and DoS. The OTP endpoint accepted unlimited attempts, allowing attackers to brute-force the code.
-  </p>
-  <img src="./vapi_resources/3ce6d626787640a1b22a0d7caa20ff7c.png" alt="OTP endpoint">
-  <img src="./vapi_resources/5f5b53f812f74b7986e1ff9bf5304b83.png" alt="Brute-forcing OTP">
-  <img src="./vapi_resources/146a7f2af86c437b8511e2ddbfbf6c57.png" alt="OTP bypassed">
-  <p>
-    <strong>Key Takeaway:</strong> Always implement rate limiting and resource quotas on sensitive endpoints.
-  </p>
+      <h2 id="api3">API3: Excessive Data Exposure & Mass Assignment</h2>
+      <p>APIs should only return necessary data. Here, sensitive fields like flags and location were exposed in API responses. Mass assignment allowed attackers to set unauthorized fields.</p>
+      <img src="./vapi_resources/1ef2f9da44d64295820a21b5bfbe19cc.png" alt="Excessive data exposure">
+      <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="Mass assignment exploit">
+      <p><strong>Key Takeaway:</strong> Filter response data server-side and use allowlists for accepted input fields.</p>
 
-  <h2 id="api5">API5: Broken Function Level Authorization (BFLA)</h2>
-  <p>
-    BFLA occurs when APIs fail to restrict access to privileged functions. Here, an endpoint allowed dumping all user data, exposing sensitive information.
-  </p>
-  <img src="./vapi_resources/05e270da7fd94a9f8ee2754ad9df3adc.png" alt="Dumping all users">
-  <p>
-    <strong>Key Takeaway:</strong> Restrict sensitive functions to authorized users only and validate permissions for every action.
-  </p>
+      <h2 id="api4">API4: Lack of Resources & Rate Limiting</h2>
+      <p>Without rate limiting, APIs are vulnerable to brute force and DoS. The OTP endpoint accepted unlimited attempts, allowing attackers to brute-force the code.</p>
+      <img src="./vapi_resources/3ce6d626787640a1b22a0d7caa20ff7c.png" alt="OTP endpoint">
+      <img src="./vapi_resources/5f5b53f812f74b7986e1ff9bf5304b83.png" alt="Brute-forcing OTP">
+      <img src="./vapi_resources/146a7f2af86c437b8511e2ddbfbf6c57.png" alt="OTP bypassed">
+      <p><strong>Key Takeaway:</strong> Always implement rate limiting and resource quotas on sensitive endpoints.</p>
 
-  <h2 id="api6">API6: Mass Assignment</h2>
-  <p>
-    Mass assignment lets attackers set sensitive fields by including them in requests. The API allowed setting the <code>credit</code> field during user creation.
-  </p>
-  <img src="./vapi_resources/1bbcac7163674a799d1ca483e3d7cfaa.png" alt="Mass assignment request">
-  <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="Credits set via mass assignment">
-  <p>
-    <strong>Key Takeaway:</strong> Use strict input validation and never allow clients to set sensitive properties directly.
-  </p>
+      <h2 id="api5">API5: Broken Function Level Authorization (BFLA)</h2>
+      <p>BFLA occurs when APIs fail to restrict access to privileged functions. Here, an endpoint allowed dumping all user data, exposing sensitive information.</p>
+      <img src="./vapi_resources/05e270da7fd94a9f8ee2754ad9df3adc.png" alt="Dumping all users">
+      <p><strong>Key Takeaway:</strong> Restrict sensitive functions to authorized users only and validate permissions for every action.</p>
 
-  <h2 id="api7">API7: Security Misconfiguration (CORS)</h2>
-  <p>
-    Misconfigured CORS headers allowed any origin to make authenticated requests, exposing sensitive data.
-  </p>
-  <pre><code>Access-Control-Allow-Origin: *
+      <h2 id="api6">API6: Mass Assignment</h2>
+      <p>Mass assignment lets attackers set sensitive fields by including them in requests. The API allowed setting the <code>credit</code> field during user creation.</p>
+      <img src="./vapi_resources/1bbcac7163674a799d1ca483e3d7cfaa.png" alt="Mass assignment request">
+      <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="Credits set via mass assignment">
+      <p><strong>Key Takeaway:</strong> Use strict input validation and never allow clients to set sensitive properties directly.</p>
+
+      <h2 id="api7">API7: Security Misconfiguration (CORS)</h2>
+      <p>Misconfigured CORS headers allowed any origin to make authenticated requests, exposing sensitive data.</p>
+      <pre><code>Access-Control-Allow-Origin: *
 Access-Control-Allow-Credentials: true</code></pre>
-  <img src="./vapi_resources/dd6c86add62b4f28bd295f0fad4cd33f.png" alt="CORS misconfiguration">
-  <p>
-    <strong>Key Takeaway:</strong> Never combine <code>Access-Control-Allow-Origin: *</code> with <code>Access-Control-Allow-Credentials: true</code>. Always specify trusted origins.
-  </p>
+      <img src="./vapi_resources/dd6c86add62b4f28bd295f0fad4cd33f.png" alt="CORS misconfiguration">
+      <p><strong>Key Takeaway:</strong> Never combine <code>Access-Control-Allow-Origin: *</code> with <code>Access-Control-Allow-Credentials: true</code>. Always specify trusted origins.</p>
 
-  <h2 id="api8">API8: Injection</h2>
-  <p>
-    The login endpoint was vulnerable to SQL injection, allowing attackers to bypass authentication and access protected endpoints.
-  </p>
-  <img src="./vapi_resources/f5012921ab5f4ac7b408236b382e11ab.png" alt="SQL error">
-  <img src="./vapi_resources/83e340531d594f97a6c68083b4ecb554.png" alt="Successful SQLi">
-  <img src="./vapi_resources/af5e48389f384af3b3a527d49dd92e32.png" alt="Flag via SQLi">
-  <p>
-    <strong>Key Takeaway:</strong> Always use parameterized queries and never expose verbose error messages.
-  </p>
+      <h2 id="api8">API8: Injection</h2>
+      <p>The login endpoint was vulnerable to SQL injection, allowing attackers to bypass authentication and access protected endpoints.</p>
+      <img src="./vapi_resources/f5012921ab5f4ac7b408236b382e11ab.png" alt="SQL error">
+      <img src="./vapi_resources/83e340531d594f97a6c68083b4ecb554.png" alt="Successful SQLi">
+      <img src="./vapi_resources/af5e48389f384af3b3a527d49dd92e32.png" alt="Flag via SQLi">
+      <p><strong>Key Takeaway:</strong> Always use parameterized queries and never expose verbose error messages.</p>
 
-  <h2 id="api9">API9: Improper Assets Management</h2>
-  <p>
-    Old, unprotected API versions were left accessible, lacking security controls like rate limiting.
-  </p>
-  <img src="./vapi_resources/8245778a45c84bc1b3f1edd87b701e09.png" alt="Old API version brute-forced">
-  <img src="./vapi_resources/8b885ff4455f483b8f91c74b8ad3122d.png" alt="Flag from old API">
-  <p>
-    <strong>Key Takeaway:</strong> Retire or secure old API versions and maintain an up-to-date API inventory.
-  </p>
+      <h2 id="api9">API9: Improper Assets Management</h2>
+      <p>Old, unprotected API versions were left accessible, lacking security controls like rate limiting.</p>
+      <img src="./vapi_resources/8245778a45c84bc1b3f1edd87b701e09.png" alt="Old API version brute-forced">
+      <img src="./vapi_resources/8b885ff4455f483b8f91c74b8ad3122d.png" alt="Flag from old API">
+      <p><strong>Key Takeaway:</strong> Retire or secure old API versions and maintain an up-to-date API inventory.</p>
 
-  <h2 id="api10">API10: Insufficient Logging and Monitoring</h2>
-  <p>
-    The API failed to log or monitor sensitive actions, allowing attacks to go undetected.
-  </p>
-  <img src="./vapi_resources/c442d8e5950c4c66a7cf1feffbee07ef.png" alt="No logging or monitoring">
-  <p>
-    <strong>Key Takeaway:</strong> Implement comprehensive logging and monitoring for all security-relevant events.
-  </p>
+      <h2 id="api10">API10: Insufficient Logging and Monitoring</h2>
+      <p>The API failed to log or monitor sensitive actions, allowing attacks to go undetected.</p>
+      <img src="./vapi_resources/c442d8e5950c4c66a7cf1feffbee07ef.png" alt="No logging or monitoring">
+      <p><strong>Key Takeaway:</strong> Implement comprehensive logging and monitoring for all security-relevant events.</p>
 
-  <h2 id="jwt">JustWeakToken: JWT Manipulation</h2>
-  <p>
-    The API accepted forged JWT tokens, allowing privilege escalation by modifying the <code>role</code> claim.
-  </p>
-  <img src="./vapi_resources/ef35863a7c5a4c5b8eeeeb25e78485ad.png" alt="JWT issued">
-  <img src="./vapi_resources/1e4a58ef1789419f960da154112bc23d.png" alt="JWT privilege escalation">
-  <p>
-    <strong>Key Takeaway:</strong> Always verify JWT signatures and use secure signing algorithms.
-  </p>
+      <h2 id="jwt">JustWeakToken: JWT Manipulation</h2>
+      <p>The API accepted forged JWT tokens, allowing privilege escalation by modifying the <code>role</code> claim.</p>
+      <img src="./vapi_resources/ef35863a7c5a4c5b8eeeeb25e78485ad.png" alt="JWT issued">
+      <img src="./vapi_resources/1e4a58ef1789419f960da154112bc23d.png" alt="JWT privilege escalation">
+      <p><strong>Key Takeaway:</strong> Always verify JWT signatures and use secure signing algorithms.</p>
 
-  <h2 id="ssrf">ServerSurfer: Server-Side Request Forgery (SSRF)</h2>
-  <p>
-    SSRF vulnerabilities allowed attackers to make the server fetch arbitrary URLs, exposing internal resources.
-  </p>
-  <img src="./vapi_resources/754bea9fb5284beabb5370fe5f670c30.png" alt="SSRF request">
-  <img src="./vapi_resources/c5ec156517524db29e197de01b960f98.png" alt="SSRF exfiltration">
-  <p>
-    <strong>Key Takeaway:</strong> Always validate and restrict URLs accepted by the server.
-  </p>
+      <h2 id="ssrf">ServerSurfer: Server-Side Request Forgery (SSRF)</h2>
+      <p>SSRF vulnerabilities allowed attackers to make the server fetch arbitrary URLs, exposing internal resources.</p>
+      <img src="./vapi_resources/754bea9fb5284beabb5370fe5f670c30.png" alt="SSRF request">
+      <img src="./vapi_resources/c5ec156517524db29e197de01b960f98.png" alt="SSRF exfiltration">
+      <p><strong>Key Takeaway:</strong> Always validate and restrict URLs accepted by the server.</p>
 
-  <h2 id="xss">StickyNotes: Cross-Site Scripting (XSS)</h2>
-  <p>
-    The API reflected unsanitized user input, allowing stored XSS attacks.
-  </p>
-  <img src="./vapi_resources/dcdbbbb48d4b4fb392bf4a75c61af2f9.png" alt="XSS payload stored">
-  <img src="./vapi_resources/2e01fd2587a54e2898cb5c2a3fef319f.png" alt="XSS alert">
-  <p>
-    <strong>Key Takeaway:</strong> Always sanitize user input and set appropriate response headers.
-  </p>
+      <h2 id="xss">StickyNotes: Cross-Site Scripting (XSS)</h2>
+      <p>The API reflected unsanitized user input, allowing stored XSS attacks.</p>
+      <img src="./vapi_resources/dcdbbbb48d4b4fb392bf4a75c61af2f9.png" alt="XSS payload stored">
+      <img src="./vapi_resources/2e01fd2587a54e2898cb5c2a3fef319f.png" alt="XSS alert">
+      <p><strong>Key Takeaway:</strong> Always sanitize user input and set appropriate response headers.</p>
+    </div>
 
-  <a href="../writeups.html">← Back to Write-ups</a>
-</main>
+    <div class="writeup-navigation">
+      <a href="../writeups.html" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to Writeups
+      </a>
+    </div>
+  </main>
 
-<footer class="footer-socials">
-  <div>
-    <a href="https://github.com/0s3zu4" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-    <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-    <a href="https://x.com/__zua" target="_blank" title="X (Twitter)"><i class="fab fa-x-twitter"></i></a>
-  </div>
-</footer>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social-links">
+      <a href="https://github.com/0s3zu4" target="_blank" class="social-link" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/osezua-agboifoh/" target="_blank" class="social-link" title="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="https://x.com/__zua" target="_blank" class="social-link" title="X (Twitter)">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+    </div>
+    <p>&copy; 2024 Osezua. All rights reserved.</p>
+  </footer>
 
-<script src="writeups-theme.js"></script>
+  <!-- Scripts -->
+  <script src="../global.js"></script>
+  <script src="writeups-theme.js"></script>
+</body>
+</html>

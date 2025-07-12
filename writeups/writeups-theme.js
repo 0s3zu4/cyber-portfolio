@@ -1,61 +1,192 @@
-// Matrix Rain Effect
-const canvas = document.getElementById('matrix');
-const ctx = canvas.getContext('2d');
-let w = window.innerWidth;
-let h = window.innerHeight;
-canvas.width = w;
-canvas.height = h;
-let cols = Math.floor(w / 18);
-let ypos = Array(cols).fill(0);
+// Writeups Theme JavaScript - Specific functionality for writeup pages
+// This file complements global.js and provides writeup-specific interactions
 
-function matrix() {
-  ctx.fillStyle = "#0a0a12cc";
-  ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = "#00f0ff";
-  ctx.font = "16px Fira Mono, monospace";
-  ypos.forEach((y, ind) => {
-    const text = String.fromCharCode(0x30A0 + Math.random() * 96);
-    ctx.fillText(text, ind * 18, y);
-    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
-    else ypos[ind] = y + 18;
-  });
-}
-setInterval(matrix, 50);
-window.addEventListener('resize', () => {
-  w = window.innerWidth;
-  h = window.innerHeight;
-  canvas.width = w;
-  canvas.height = h;
-  cols = Math.floor(w / 18);
-  ypos = Array(cols).fill(0);
-});
-
-// Nano Navbar Dropdowns (hover + keyboard)
-document.querySelectorAll('.nano-dropdown').forEach(dd => {
-  dd.addEventListener('mouseenter', function () {
-    document.querySelectorAll('.nano-dropdown').forEach(d => d !== dd && d.classList.remove('active'));
-    dd.classList.add('active');
-  });
-  dd.addEventListener('mouseleave', function () {
-    dd.classList.remove('active');
-  });
-  dd.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === ' ') {
+// Side Panel Dropdowns - Enhanced functionality
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize side panel dropdowns
+  const sidePanelLinks = document.querySelectorAll('.side-panel-link');
+  
+  sidePanelLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
       e.preventDefault();
-      dd.classList.toggle('active');
+      
+      // Close other open dropdowns
+      sidePanelLinks.forEach(l => {
+        if (l !== link) {
+          l.classList.remove('open');
+        }
+      });
+      
+      // Toggle current dropdown
+      link.classList.toggle('open');
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.side-panel')) {
+      sidePanelLinks.forEach(link => {
+        link.classList.remove('open');
+      });
     }
   });
-});
-document.body.addEventListener('click', () => {
-  document.querySelectorAll('.nano-dropdown').forEach(d => d.classList.remove('active'));
+
+  // Highlight active writeup in side panel
+  const currentPath = window.location.pathname;
+  const sidePanelDropdownLinks = document.querySelectorAll('.side-panel-dropdown a');
+  
+  sidePanelDropdownLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href && currentPath.includes(href.replace('./', ''))) {
+      link.classList.add('active');
+      // Open the parent dropdown
+      const parentLink = link.closest('.side-panel-dropdown').previousElementSibling;
+      if (parentLink) {
+        parentLink.classList.add('open');
+      }
+    }
+  });
+
+  // Add smooth scrolling to anchor links
+  const anchorLinks = document.querySelectorAll('a[href^="#"]');
+  anchorLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+
+  // Add copy functionality to code blocks
+  const codeBlocks = document.querySelectorAll('pre code');
+  codeBlocks.forEach(block => {
+    block.addEventListener('click', () => {
+      navigator.clipboard.writeText(block.textContent).then(() => {
+        // Show a brief "copied" message
+        const originalText = block.textContent;
+        block.textContent = 'Copied!';
+        block.style.color = '#1aff99';
+        
+        setTimeout(() => {
+          block.textContent = originalText;
+          block.style.color = '';
+        }, 1000);
+      });
+    });
+    
+    // Add cursor pointer to indicate clickable
+    block.style.cursor = 'pointer';
+  });
+
+  // Add image zoom functionality
+  const images = document.querySelectorAll('main.writeup-plain img');
+  images.forEach(img => {
+    img.addEventListener('click', () => {
+      // Create modal for image zoom
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        cursor: pointer;
+      `;
+      
+      const modalImg = document.createElement('img');
+      modalImg.src = img.src;
+      modalImg.style.cssText = `
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 8px;
+      `;
+      
+      modal.appendChild(modalImg);
+      document.body.appendChild(modal);
+      
+      // Close modal on click
+      modal.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+    });
+    
+    // Add cursor pointer to indicate clickable
+    img.style.cursor = 'pointer';
+  });
+
+  // Add table of contents functionality for long writeups
+  const headings = document.querySelectorAll('main.writeup-plain h2, main.writeup-plain h3');
+  if (headings.length > 3) {
+    const toc = document.createElement('div');
+    toc.className = 'table-of-contents';
+    toc.innerHTML = `
+      <h3>Table of Contents</h3>
+      <ul>
+        ${Array.from(headings).map((heading, index) => {
+          const id = heading.id || `heading-${index}`;
+          heading.id = id;
+          return `<li><a href="#${id}">${heading.textContent}</a></li>`;
+        }).join('')}
+      </ul>
+    `;
+    
+    // Insert TOC after the first h1
+    const firstH1 = document.querySelector('main.writeup-plain h1');
+    if (firstH1) {
+      firstH1.parentNode.insertBefore(toc, firstH1.nextSibling);
+    }
+  }
 });
 
-// Side Panel Dropdowns
-document.querySelectorAll('.side-panel-link').forEach(link => {
-  link.addEventListener('click', function() {
-    document.querySelectorAll('.side-panel-link').forEach(l => {
-      if(l !== link) l.classList.remove('open');
-    });
-    link.classList.toggle('open');
-  });
-});
+// Add CSS for table of contents
+const tocStyles = `
+  .table-of-contents {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  .table-of-contents h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .table-of-contents ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .table-of-contents li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .table-of-contents a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+  }
+  
+  .table-of-contents a:hover {
+    color: var(--accent);
+  }
+`;
+
+// Inject TOC styles
+const styleSheet = document.createElement('style');
+styleSheet.textContent = tocStyles;
+document.head.appendChild(styleSheet);
