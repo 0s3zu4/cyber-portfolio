@@ -18,8 +18,7 @@
   <link rel="stylesheet" href="global.css">
 </head>
 <body>
-  <!-- Matrix Background -->
-  <canvas id="matrix"></canvas>
+
 
   <!-- Header -->
   <header class="header">
@@ -55,8 +54,28 @@
     </nav>
   </div>
 
+  <!-- Side Panel -->
+  <aside class="side-panel">
+    <div class="side-panel-title">Categories</div>
+    <div class="side-panel-link" data-panel="automation">Automation <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-automation">
+      <a href="Projects/android-lab-scripts.html">Android Lab Scripts</a>
+      <a href="#">Security Tools Collection</a>
+    </div>
+    <div class="side-panel-link" data-panel="research">Research <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-research">
+      <a href="writeups.html">Vulnerability Research</a>
+      <a href="#">Security Assessment Framework</a>
+    </div>
+    <div class="side-panel-link" data-panel="tools">Tools <i class="fas fa-caret-down"></i></div>
+    <div class="side-panel-dropdown" id="panel-tools">
+      <a href="#">Custom Security Tools</a>
+      <a href="#">Penetration Testing Tools</a>
+    </div>
+  </aside>
+
   <!-- Main Content -->
-  <main class="main">
+  <main class="main projects-main">
     <h1>Projects</h1>
     <p class="text-center mb-4">Tools, scripts, and research projects I've developed for cybersecurity testing and automation.</p>
     
@@ -169,5 +188,36 @@
 
   <!-- Scripts -->
   <script src="global.js"></script>
+  <script>
+    // Side Panel Dropdowns for Projects Page
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidePanelLinks = document.querySelectorAll('.side-panel-link');
+      
+      sidePanelLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Close other open dropdowns
+          sidePanelLinks.forEach(l => {
+            if (l !== link) {
+              l.classList.remove('open');
+            }
+          });
+          
+          // Toggle current dropdown
+          link.classList.toggle('open');
+        });
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.side-panel')) {
+          sidePanelLinks.forEach(link => {
+            link.classList.remove('open');
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>

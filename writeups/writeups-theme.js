@@ -127,12 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add table of contents functionality for long writeups
   const headings = document.querySelectorAll('main.writeup-plain h2, main.writeup-plain h3');
-  if (headings.length > 3) {
-    const toc = document.createElement('div');
-    toc.className = 'table-of-contents';
-    toc.innerHTML = `
-      <h3>Table of Contents</h3>
-      <ul>
+  if (headings.length >= 3) {
+    // Create side panel for table of contents
+    const tocSidePanel = document.createElement('aside');
+    tocSidePanel.className = 'toc-side-panel';
+    tocSidePanel.innerHTML = `
+      <div class="toc-title">Table of Contents</div>
+      <ul class="toc-list">
         ${Array.from(headings).map((heading, index) => {
           const id = heading.id || `heading-${index}`;
           heading.id = id;
@@ -141,52 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
       </ul>
     `;
     
-    // Insert TOC after the first h1
-    const firstH1 = document.querySelector('main.writeup-plain h1');
-    if (firstH1) {
-      firstH1.parentNode.insertBefore(toc, firstH1.nextSibling);
+    // Insert TOC side panel before the main content
+    const mainContent = document.querySelector('main.writeup-plain');
+    if (mainContent) {
+      mainContent.parentNode.insertBefore(tocSidePanel, mainContent);
     }
+    
+    // Add class to main content for side panel layout
+    mainContent.classList.add('with-toc');
   }
 });
 
-// Add CSS for table of contents
-const tocStyles = `
-  .table-of-contents {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 2rem 0;
-  }
-  
-  .table-of-contents h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: var(--accent);
-  }
-  
-  .table-of-contents ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .table-of-contents li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .table-of-contents a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: var(--transition);
-  }
-  
-  .table-of-contents a:hover {
-    color: var(--accent);
-  }
-`;
-
-// Inject TOC styles
-const styleSheet = document.createElement('style');
-styleSheet.textContent = tocStyles;
-document.head.appendChild(styleSheet);

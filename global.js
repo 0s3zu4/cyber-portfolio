@@ -67,53 +67,7 @@ class MobileMenu {
   }
 }
 
-// Matrix Background Effect
-class MatrixBackground {
-  constructor() {
-    this.canvas = document.getElementById('matrix');
-    if (!this.canvas) return;
-    
-    this.ctx = this.canvas.getContext('2d');
-    this.init();
-  }
 
-  init() {
-    this.resize();
-    window.addEventListener('resize', () => this.resize());
-    this.animate();
-  }
-
-  resize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-    this.cols = Math.floor(this.canvas.width / 20);
-    this.ypos = Array(this.cols).fill(0);
-  }
-
-  animate() {
-    this.ctx.fillStyle = 'rgba(10, 20, 28, 0.1)';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.ctx.fillStyle = '#00f0ff';
-    this.ctx.font = '15px monospace';
-
-    for (let i = 0; i < this.ypos.length; i++) {
-      const text = String.fromCharCode(Math.random() * 128);
-      const x = i * 20;
-      const y = this.ypos[i] * 1;
-
-      this.ctx.fillText(text, x, y);
-
-      if (y > 100 + Math.random() * 10000) {
-        this.ypos[i] = 0;
-      } else {
-        this.ypos[i]++;
-      }
-    }
-
-    requestAnimationFrame(() => this.animate());
-  }
-}
 
 // Smooth Scrolling
 class SmoothScroll {
@@ -196,8 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize mobile menu
   new MobileMenu();
 
-  // Initialize matrix background
-  new MatrixBackground();
+
 
   // Initialize smooth scrolling
   new SmoothScroll();
