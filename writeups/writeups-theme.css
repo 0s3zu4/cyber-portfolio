@@ -11,7 +11,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 230px;
+  width: 280px;
   height: 100vh;
   background: var(--bg-secondary);
   border-right: 2px solid var(--accent);
@@ -22,6 +22,7 @@ body {
   flex-direction: column;
   gap: 18px;
   transition: var(--transition);
+  overflow-y: auto;
 }
 
 .side-panel-title {
@@ -31,14 +32,17 @@ body {
   margin-bottom: 18px;
   margin-left: 24px;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  opacity: 0.8;
 }
 
 .side-panel-link {
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 1.08em;
+  font-size: 1em;
   font-weight: 500;
-  padding: 10px 24px;
+  padding: 12px 24px;
   border-radius: 8px;
   margin: 0 12px;
   transition: var(--transition);
@@ -46,6 +50,7 @@ body {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .side-panel-link:hover, 
@@ -53,6 +58,7 @@ body {
   background: rgba(0, 240, 255, 0.1);
   color: var(--accent);
   box-shadow: 0 0 12px var(--shadow);
+  border-color: var(--accent);
 }
 
 .side-panel-link i {
@@ -80,17 +86,19 @@ body {
 .side-panel-dropdown a {
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.98em;
-  padding: 6px 0 6px 12px;
+  font-size: 0.95em;
+  padding: 8px 0 8px 16px;
   border-radius: 6px;
   transition: var(--transition);
   cursor: pointer;
+  border-left: 2px solid transparent;
 }
 
 .side-panel-dropdown a:hover, 
 .side-panel-dropdown a.active {
   background: rgba(0, 240, 255, 0.1);
   color: var(--accent);
+  border-left-color: var(--accent);
 }
 
 @keyframes slideDown {
@@ -106,7 +114,7 @@ body {
 
 /* Writeup Content Layout */
 main.writeup-plain {
-  margin: 120px 0 60px 270px;
+  margin: 120px 0 60px 320px;
   max-width: 900px;
   padding: 0 24px;
   z-index: 2;
@@ -225,22 +233,40 @@ main.writeup-plain a:hover {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .side-panel { 
+    width: 250px; 
+  }
+  main.writeup-plain { 
+    margin-left: 290px; 
+  }
+}
+
 @media (max-width: 900px) {
   .side-panel { 
-    width: 160px; 
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 2px solid var(--accent);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    overflow-y: visible;
   }
   .side-panel-title { 
-    margin-left: 12px; 
+    margin-left: 20px; 
   }
   .side-panel-link { 
-    padding: 8px 12px; 
+    margin: 0 16px;
+    padding: 12px 20px; 
     font-size: 1em; 
   }
   .side-panel-dropdown { 
-    margin-left: 18px; 
+    margin-left: 24px; 
   }
   main.writeup-plain { 
-    margin-left: 180px; 
+    margin: 40px 0 60px 0; 
+    padding: 0 16px; 
   }
   .writeups-list {
     grid-template-columns: 1fr;
@@ -249,10 +275,11 @@ main.writeup-plain a:hover {
 
 @media (max-width: 700px) {
   .side-panel { 
-    display: none; 
+    width: 100%;
+    padding: 16px;
   }
   main.writeup-plain { 
-    margin-left: 0; 
+    margin: 20px 0 60px 0; 
     padding: 0 16px; 
   }
   .writeups-list {
