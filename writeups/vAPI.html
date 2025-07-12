@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>vAPI Walkthrough | Osezua</title>
-  <meta name="description" content="Comprehensive vAPI challenge walkthrough covering OWASP API Security Top 10 vulnerabilities">
+  <meta name="description" content="Comprehensive walkthrough of the vAPI lab covering various API security vulnerabilities and exploitation techniques">
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="writeups-theme.css">
 </head>
 <body>
-
 
   <!-- Header -->
   <header class="header">
@@ -88,107 +87,434 @@
   <!-- Main Content -->
   <main class="writeup-plain">
     <div class="writeup-header">
-      <h1>vAPI Walkthrough & Documentation</h1>
+      <h1>vAPI Walkthrough and Documentation</h1>
       <div class="writeup-meta">
-        <span class="tag">API Security</span>
-        <span class="tag">OWASP Top 10</span>
-        <span class="tag">Web Security</span>
+        <span class="tag">API</span>
+        <span class="tag">Security</span>
+        <span class="tag">OWASP</span>
       </div>
     </div>
 
     <div class="writeup-content">
-      <div class="intro-large">
-        Comprehensive walkthrough of the vAPI challenge covering exploitation of multiple API vulnerabilities mapped to the OWASP API Security Top 10.
+      <img src="./vapi_resources/ee665a6ad88c4d508989f10d8a87a22d.png" alt="6d584496f82071c6d71545f2ce88c0f4.png">
+      <h1 id="api1">API1</h1>
+      <h3 id="broken-object-level-authorization">Broken Object Level Authorization</h3>
+      <p>Broken Object Level Authorization (BOLA) is one of the most prevalent and severe API vulnerabilities. It occurs when an API does not properly enforce authorization checks, allowing attackers to access or manipulate resources <code class="inline-code">they do not own.</code> BOLA often arises when object IDs are predictable or sequential, and the API relies solely on these IDs without verifying ownership.</p>
+      <p>In this scenario, I registered on the vAPI application with the name <code class="inline-code">Osezua</code> and was assigned the user ID <code class="inline-code">5.</code><br>
+      <img src="./vapi_resources/387101d41f894a61a0423984f9222896.png" alt="85561e44d471cd5a29579fd0f85b993e.png"></p>
+      <p>The Get User endpoint follows this pattern:</p>
+      <pre>http://{{host}}/vapi/api1/user/{id}</pre>
+      <p> <br>
+      After authenticating as <code class="inline-code">user 5</code>, I began modifying the id parameter in the URL to test if I could access other users’ data. By changing the ID from 1 to 4, I successfully retrieved details of other users {something I should not be authorized to do.}<br>
+      <img src="./vapi_resources/575fe068af13430a9a9ac1b172ddf18e.png" alt="593a7a99f01a620d5218ce02f62698eb.png"><br>
+      For example, in the image below, you can see the flag belonging to user 1:<br>
+      <img src="./vapi_resources/84c969b9fd3046748468a69a200c524c.png" alt="acce1dd1e8c5eed007e9213b7572e55b.png"><br>
+      ️</p>
+      <h3 id="impact-unauthorized-updates">Impact: Unauthorized Updates</h3>
+      <p>Beyond viewing other users’ data, I was also able to modify other users’ profiles by issuing PUT requests with their IDs. This demonstrates a critical lack of authorization checks on update operations.<br>
+      ️<br>
+      <img src="./vapi_resources/c6ce80d3e6894ec7a787700de807a169.png" alt="73c2b5f8c419c19de0ced6fbdd1b48db.png"><br>
+      <img src="./vapi_resources/2344a4e883b54556b16262f94285b687.png" alt="83b9263c32f0ba9d8e813d1d6a675203.png"></p>
+      <p><strong>Key Takeaway</strong><br>
+      This is a classic BOLA vulnerability. APIs should always verify object ownership before returning or modifying data. Simply relying on predictable or sequential IDs without proper access controls exposes applications to serious risks.</p>
+
+      <h1 id="api2">API2</h1>
+      <h3 id="broken-authentication">Broken Authentication</h3>
+      <p>Broken Authentication is a critical API vulnerability that occurs when authentication mechanisms are improperly implemented, allowing attackers to compromise user accounts, bypass login, or perform unauthorized actions.</p>
+      <p><strong>hint</strong>We don't seem to have credentials for this , How do we login? (There's something in the Resources Folder given to you )<br>
+      ️<br>
+      Initially, we did not have valid credentials to access the API:<br>
+      <img src="./vapi_resources/86c8394fab474759adbe1d96d24771e1.png" alt="361708082cf1db6280c5d77fdfeb90f9.png"></p>
+      <p>To investigate further, I configured my browser/device to proxy through Burp Suite:<br>
+      <img src="./vapi_resources/dfd5845aeafe4956ace63299e1b22f25.png" alt="be11d1e7bc6a5c098f014777ebc27aab.png"></p>
+      <p>I explored the Resources Folder provided as part of the challenge and found a creds.csv file containing potential email addresses and passwords:<br>
+      <img src="./vapi_resources/2877593bc93a477291eabafa202650ec.png" alt="6363303ffbb8a4340fce4e591121fa02.png"><br>
+      To prepare for a brute force attack, I split the creds.csv file into separate emails.txt and passwords.txt files using this command:</p>
+      <pre>awk -F',' '{print $1 > "emails.txt"; print $2 > "passwords.txt"}' creds.csv </pre>
+      <img src="./vapi_resources/171060a9fdac48af9cd047bde7faf6ea.png" alt="cb1927448f6ab7a2c4835c478d180f3a.png"></p>
+      <p><strong>Performing the Attack</strong><br>
+      I intercepted a login request using Burp Suite, then sent it to Intruder. To brute force both email and password combinations, I selected a Pitchfork attack type.<br>
+      ⚠️ <strong>Important:</strong> I disabled URL encoding on the payloads to avoid interference with special characters.<br>
+      <img src="./vapi_resources/eb84c68f3e47407c9997d7ab98852897.png" alt="85b7a5cab90560aaeb620bd0f1a550f5.png"></p>
+      <p><strong>Results</strong><br>
+      The brute force attack successfully identified two valid credential pairs:<br>
+      <img src="./vapi_resources/00821815e5654a4b8e186056ca66d7a1.png" alt="5d869b8eaee1f2978bf7c13df1edfdd7.png"></p>
+      <p>With these, I was able to log in and access user details through the API.<br>
+      <img src="./vapi_resources/93f0b08b2da549feb81faa54c585d090.png" alt="3f417cf5a3d92015eeacfcef512ed834.png"><br>
+      <img src="./vapi_resources/f7b7422c8cab43e9a5f9c5c770e45d85.png" alt="9157e5fc98b28390512ae4044b4e4537.png"></p>
+      <h3 id="key-takeaway">Key Takeaway</h3>
+      <p>This demonstrates Broken Authentication, where:</p>
+      <ul>
+      <li>The API failed to implement protections against credential stuffing or brute force attacks.</li>
+      <li>Sensitive credential data was poorly stored or exposed (in this case, accessible via the resources folder).</li>
+      </ul>
+      <p>APIs should enforce strong authentication controls, including rate limiting, account lockout mechanisms, and multi-factor authentication.</p>
+
+      <h1 id="api3">API3</h1>
+      <h3 id="excessive-data-exposure">Excessive Data Exposure</h3>
+      <p><strong>Broken Object Property Level Authorization (BOPLA)</strong> — listed as API3 in the OWASP API Security Top 10 (2023) — combines two critical weaknesses from the 2019 edition:<br>
+      ➡ Excessive Data Exposure<br>
+      ➡ Mass Assignment</p>
+      <p><strong>Excessive Data Exposure</strong><br>
+      This occurs when an API returns an entire data object, including sensitive or unnecessary fields, rather than filtering data to what the client actually needs. This increases the risk of leaking sensitive information such as internal IDs, secrets, or private attributes.</p>
+      <p><strong>Mass Assignment</strong><br>
+      This vulnerability allows attackers to modify sensitive object properties by passing unexpected fields in their requests. Without proper controls, this could lead to privilege escalation or unauthorized actions — such as creating an admin account or changing permissions.</p>
+      <p><strong>hint</strong>: We have all been there , right? Giving away too much data and the Dev showing it . Try the Android App in the Resources folder</p>
+      <h3 id="walkthrough">Walkthrough</h3>
+      <p>In this exercise, I worked with an APK file provided in the Resources folder. I installed the APK on my Android emulator (Android Studio emulator in my case):<br>
+      this exesice involves an apk app, I have instatlled the apk on my andriod emulator</p>
+      <p><img src="./vapi_resources/16fac4935b6f476896c8c2590f1364fb.png" alt="f292addbac1c650906653a8c16bbf60a.png"><br>
+      ️<br>
+      When setting up the app, I configured the Base URL as 10.0.2.2:8000/vapi — note that 10.0.2.2 is the standard alias for localhost on Android Studio emulators<br>
+      <img src="./vapi_resources/d4c6bccfdd834aee8459eeb0367dcb05.png" alt="5c7b5bedb07c28274c40d7221f03ca7f.png"><br>
+      I registered a new account within the app:<br>
+      <img src="./vapi_resources/b9a6d192d43943899ab0cb1f881ab479.png" alt="9c2767e3486aa99bec90ddc46c9e08d4.png"><br>
+      ️<br>
+      ️<br>
+      <strong>Discovering Excessive Data Exposure</strong><br>
+      After logging in, I viewed comments in the app. Inspecting the API traffic with Burp Suite, I noticed that the API response included much more information than necessary, exposing not only the comment text, but also:</p>
+      <ul>
+      <li>The API flag</li>
+      <li>The latitude and longitude of the user who made the comment<br>
+      <img src="./vapi_resources/1ef2f9da44d64295820a21b5bfbe19cc.png" alt="7cfdaa5f9ef346b38098e64a3482e826.png"><br>
+      When I submitted my own comment, the API also exposed my own location data in the response, confirming the excessive data exposure.</li>
+      </ul>
+      <p><strong>Key Takeaway</strong><br>
+      This demonstrates the dangers of excessive data exposure in APIs. The API should have filtered out sensitive properties and returned only what the client needed — e.g., the comment text and author display name.</p>
+      <ul>
+      <li><em><strong>Always apply property-level filtering server-side, and avoid trusting the client to handle sensitive data properly.</strong></em></li>
+      </ul>
+
+      <h1 id="api4">API4</h1>
+      <h3 id="lack-of-resources-rate-limiting">Lack of Resources &amp; Rate Limiting</h3>
+      <p><strong>Lack of Resources &amp; Rate Limiting</strong> is a critical API security issue that arises when APIs fail to enforce limits on client requests. Without proper rate limiting and resource control, APIs become vulnerable to brute force attacks, denial-of-service (DoS), and abuse of functionalities such as authentication endpoints.</p>
+      <p>In this vAPI challenge, we explored how an improperly protected OTP (One-Time Password) mechanism can be exploited due to the absence of rate limiting.</p>
+      <p><strong>hint</strong> We believe OTPs are a great way of authenticating users and secure too if implemented correctly!</p>
+      <h3 id="walkthrough-2">Walkthrough</h3>
+      <p>In this exercise, I tested an endpoint that sends an OTP to a user-supplied phone number for authentication. As seen in the response below, a 4-digit OTP was generated and sent:<br>
+      <img src="./vapi_resources/3ce6d626787640a1b22a0d7caa20ff7c.png" alt="40a8023ac2b6e516a55882746d2917d4.png"><br>
+      ️<br>
+      When I entered a random OTP, the API responded with a 403 Forbidden, indicating that the code was incorrect:<br>
+      <img src="./vapi_resources/4b0825d259c94db5884a5f0dda2376e3.png" alt="49cc71cdc03aa4e5df73fa4cc3cea292.png"><br>
+      ️<br>
+      <strong>Brute-Forcing the OTP</strong><br>
+      I intercepted the OTP verification request in Burp Suite, then sent it to Intruder to fuzz through all possible 4-digit numeric combinations (0000–9999).</p>
+      <p>➡ That’s 10,000 possible combinations — easily doable without any rate limiting in place.<br>
+      <img src="./vapi_resources/5f5b53f812f74b7986e1ff9bf5304b83.png" alt="2d1633487ace336fd74f94490308937a.png"><br>
+      ️<br>
+      Eventually, the attack successfully identified the correct OTP. With this, I obtained a valid authorization token and used it to access protected user details:<br>
+      <img src="./vapi_resources/146a7f2af86c437b8511e2ddbfbf6c57.png" alt="f00db2737b452935dc61c62c5a27bd92.png"><br>
+      ️<br>
+      <img src="./vapi_resources/ba3b8a4b60864ba68265286a78286859.png" alt="2754aaee9acefc0def4e5b58126f6985.png"></p>
+      <p><strong>Key Takeaway</strong><br>
+      This scenario highlights the risk of no rate limiting on critical endpoints like OTP verification. Without proper controls:</p>
+      <ul>
+      <li>Attackers can brute force OTPs or other secrets.</li>
+      <li>The system is vulnerable to resource exhaustion and DoS attacks.</li>
+      <li>Sensitive operations (like login or account recovery) can be abused.</li>
+      </ul>
+
+      <h1 id="api5">API5</h1>
+      <p><strong>Broken Function Level Authorization (BFLA)</strong> happens when an API fails to properly enforce authorization checks at the functional level. In other words, users can invoke privileged API functions or administrative endpoints that should be restricted.</p>
+      <p><strong>hint</strong> You can register yourself as a User. Thats it or is there something more? (I heard admin logins often but uses different route)</p>
+      <p><strong>Walkthrough</strong><br>
+      In this scenario, I started by registering a normal user via the Create User API.</p>
+      <p><img src="./vapi_resources/a16282905dc5494ca11df14962a34342.png" alt="20bce34947207e4f3adcdc4e9bb8f8dc.png"><br>
+      The response confirmed that my user was created and assigned an ID of 5.<br>
+      ️<br>
+      Next, I used the Get User query to log in as the newly created user.<br>
+      <img src="./vapi_resources/00225bd65c2c46e389cd94547c86129c.png" alt="c7968cdb2efa6a63c8762d73f05c98d8.png"><br>
+      The login was successful, and I noticed that the user ID was passed in the URL.<br>
+      ️<br>
+      ️</p>
+      <h3 id="attempting-to-escalate-privileges">Attempting to Escalate Privileges</h3>
+      <p>I tried modifying the URL to replace my user ID (5) with other IDs (such as 1 or 2), hoping to access another user’s data, possibly an admin account.<br>
+      <img src="./vapi_resources/2d310f2ce141442395793e8dbf8e5778.png" alt="23e40cf25668696cf581689eb992c078.png"></p>
+      <p>However, this was blocked — I received a 403 Forbidden response.<br>
+      Remembering the task hint that admin logins occur through a different route, I attempted to manually guess potential admin endpoints such as:<br>
+      <code class="inline-code">http://{{host}}/vapi/api5/user/admin/</code><br>
+      <code class="inline-code">http://{{host}}/vapi/api5/admin/1</code></p>
+      <p>These attempts failed as well, returning <code class="inline-code">500 Internal Server Error,</code> suggesting the endpoints either didn’t exist or weren’t properly handled</p>
+      <p><img src="./vapi_resources/76afd724d28e4ecd8f6bec96be98f245.png" alt="b8358bb934120329cd32a5ba6b4e9872.png"></p>
+      <p><strong>Dumping All Users' Data</strong><br>
+      Finally, instead of targeting individual users, I crafted a request to try dumping all user data at once. This time, the request was successful, and the response contained data for all users in the system (five in this case), including the flag for this task.</p>
+      <p><img src="./vapi_resources/05e270da7fd94a9f8ee2754ad9df3adc.png" alt="1ee8af98b144f41b597f4d931320745e.png"></p>
+      <p><strong>Key Takeaway</strong><br>
+      This example demonstrates Broken Function Level Authorization where the API fails to restrict access to sensitive functions that should only be available to admins. Even though individual user data was protected, the API exposed an endpoint that allowed mass data disclosure — a critical security flaw.</p>
+
+      <h1 id="api6">API6</h1>
+      <h3 id="mass-assignment">Mass Assignment</h3>
+      <p><strong>Mass Assignment</strong> vulnerabilities occur when an API blindly accepts client-supplied input into internal objects without filtering or restricting which properties can be modified. This can allow attackers to overwrite sensitive fields that were never meant to be set by the client, leading to unauthorized access, privilege escalation, or data manipulation.</p>
+      <p><strong>Walkthrough</strong><br>
+      In this challenge, we’re welcomed to a playful API-based store with the promise:<br>
+      <em><strong>&quot;We will give you credits if you behave nicely. Our credit management is super secure.&quot;</strong></em></p>
+      <p>I started by creating a standard user using the provided API endpoint.<br>
+      <img src="./vapi_resources/5283133e66ae47689dd96f831133ff7f.png" alt="9594c7ecce830ed7997e541a98a2d3ef.png"><br>
+      ️<br>
+      Once the user was created, I queried the user details. As expected, the new account had zero credits. The default starting balance.<br>
+      <img src="./vapi_resources/c698cc09bc6b448f803cbc1a23c12db1.png" alt="6e33bc920b69b41f601f5909db09794b.png"><br>
+      ️<br>
+      <strong>Exploiting Mass Assignment</strong><br>
+      Next, I decided to test if the API properly validated the fields during user creation. I crafted a new request to create another user, but this time I added an extra field called <code class="inline-code">credit</code> in the JSON body, and assigned it a value of <code class="inline-code">5000.</code></p>
+      <p>This is the request I sent:<br>
+      <img src="./vapi_resources/1bbcac7163674a799d1ca483e3d7cfaa.png" alt="a1dee410502b5f605cf14793b9a1378d.png"><br>
+      ️<br>
+      <strong>Verifying the Attack</strong></p>
+      <p>After submitting the request, I queried this new user’s details. As you can see, the account was created with 5000 credits, without any legitimate action to earn them! The API failed to block this unauthorized field modification.<br>
+      <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="06ea98050cdf0ef10d403b6816245433.png"></p>
+      <p>To top it off, the response also revealed the API6 flag, demonstrating how dangerous mass assignment can be when sensitive properties are not properly protected.</p>
+      <p><strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Mass Assignment vulnerabilities often result from improper input filtering or overly permissive binding of client-supplied data to server-side models.</li>
+      <li>APIs should enforce strict allowlists of acceptable properties and ignore or reject unexpected fields.</li>
+      <li>Sensitive properties, like credit balances, roles, or permissions, should never be modifiable through client requests.</li>
+      </ul>
+
+      <h1 id="api7">API7</h1>
+      <h3 id="security-misconfiguration">Security Misconfiguration</h3>
+      <p><strong>Security Misconfiguration</strong> is a common and dangerous issue in APIs, often resulting from insecure default settings, incomplete configurations, or improper exposure of sensitive information. In this case, we focus on a misconfigured <code class="inline-code">CORS (Cross-Origin Resource Sharing)</code>policy that can lead to unauthorized access from malicious websites.</p>
+      <p><strong>Hint</strong>: Hey , its an API right? so we ARE expecting Cross Origin Requests . We just hope it works fine.</p>
+      <p><strong>Walkthrough</strong></p>
+      <p>I began by creating a new user through the API:<br>
+      <img src="./vapi_resources/d39ad22017394466b2ee713babd9a4b4.png" alt="473936dcc00d380ee24b2d557047b14c.png"></p>
+      <p>Then, I logged in using the provided credentials:<br>
+      <img src="./vapi_resources/f4cb3c51b0d54e5e8220e31951eb1e59.png" alt="9c8057ab30ae97fbe558f252b6e78840.png"></p>
+      <p>The login was successful, and I obtained an auth key for the session:<br>
+      <img src="./vapi_resources/b750e5d6e3f44748831b76a95cf2e6e6.png" alt="adcb5f8b72e422e7e84184346c34c332.png"><br>
+      ️<br>
+      <strong>Inspecting CORS Policy</strong><br>
+      When examining the response headers, I noticed two critical misconfigurations:</p>
+      <pre>Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true</pre>
+      <img src="./vapi_resources/dd6c86add62b4f28bd295f0fad4cd33f.png" alt="baf47a292f0be1ec818e58f516631914.png"></p>
+      <p>➡ <code class="inline-code">Access-Control-Allow-Origin: *</code> means requests from any origin (domain) are allowed.<br>
+      ➡ <code class="inline-code">Access-Control-Allow-Credentials: true</code> means cookies, auth headers, or TLS client certificates are permitted in cross-origin requests.</p>
+      <p>This combination is extremely dangerous because it allows any website to make authenticated requests to this API and retrieve sensitive data.<br>
+      ️<br>
+      <strong>Exploiting the Misconfiguration</strong></p>
+      <p>To prove the issue, I modified my request to include an Origin header, setting it to an arbitrary domain, in this case, <code class="inline-code">osezua.com</code></p>
+      <p><img src="./vapi_resources/b80329e54ab14cf88d6f3cfaeddf7aa4.png" alt="51a812bdb50f121c7342ec4f55b0a359.png"><br>
+      Despite the foreign origin, the server accepted the request and returned sensitive user information, including the flag for this task.</p>
+      <p><strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Never combine Access-Control-Allow-Origin: * with Access-Control-Allow-Credentials: true. This breaks the same-origin policy and exposes your API to cross-origin attacks.</li>
+      <li>CORS policies should always:
+      <ul>
+      <li>Be as restrictive as possible.</li>
+      <li>Specify trusted origins explicitly rather than using *.</li>
+      <li>Avoid allowing credentials unless absolutely necessary and secure.</li>
+      </ul>
+      </li>
+      <li>Review API server configurations regularly to eliminate risky defaults or unintended exposures.</li>
+      </ul>
+
+      <h1 id="api8">API8</h1>
+      <h3 id="injection">Injection</h3>
+      <p><strong>Injection</strong> vulnerabilities occur when untrusted input is improperly handled by the server, allowing an attacker to manipulate backend queries or commands. In APIs, this often leads to data breaches, unauthorized access, or complete compromise of the backend systems — as seen here!</p>
+      <p><strong>Walkthrough</strong><br>
+      The API hints:<br>
+      <em><strong>&quot;I think you won't get credentials for this. You can try to login though.&quot;</strong></em></p>
+      <p>Challenge accepted! Let’s see what happens.</p>
+      <h3 id="attempting-normal-login">Attempting Normal Login</h3>
+      <p>I first tried logging in using invalid credentials.<br>
+      <img src="./vapi_resources/e1d9c70ac9134320ac00380a8ddcf23e.png" alt="b6354433b57fef93d09a93360bfd8aa9.png"></p>
+      <p><strong>Testing for SQL Injection</strong><br>
+      Next, I supplied a basic SQL injection payload in the login fields, looking for signs of poor input sanitization.</p>
+      <p>The server returned a verbose SQL syntax error, confirming that my input was directly interacting with the database queries, classic sign of SQL injection vulnerability<br>
+      <img src="./vapi_resources/f5012921ab5f4ac7b408236b382e11ab.png" alt="4563b4bc8b62a8d3774f3489f156ed28.png"><br>
+      ️<br>
+      <strong>Launching a Payload Attack</strong></p>
+      <p>I routed the request through Burp Suite, armed with a variety of SQL injection payloads sourced from <strong>Payloads All The Things.</strong></p>
+      <p><img src="./vapi_resources/b23b3f5dbb43481f976a2d0b9fe99457.png" alt="0a55c5805c1b08a528ec6bae7cd8e131.png"></p>
+      <p>Most of the payloads triggered 500 Internal Server Error responses, indicating the server choked on the injected queries. But crucially four payloads successfully returned <code class="inline-code">200 OK</code>responses, signaling that these payloads bypassed the filters and executed properly..<br>
+      <img src="./vapi_resources/83e340531d594f97a6c68083b4ecb554.png" alt="82d9764b94d8bd64dc51289a0480ab9f.png"></p>
+      <p><strong>Extracting the Flag</strong><br>
+      With SQL injection successfully exploited, I was able to access the GET secret API endpoint, an endpoint I was never authorized to reach.<br>
+      <img src="./vapi_resources/af5e48389f384af3b3a527d49dd92e32.png" alt="4709a0731d9190084b6a6e119a3d3c2a.png"></p>
+      <p>The response included the flag for this task, demonstrating the impact of the injection vulnerability.</p>
+      <p><strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Always sanitize and parameterize inputs in API queries. Never directly embed user input in SQL or command queries.</li>
+      <li>Use prepared statements / ORM features that enforce safe query construction.</li>
+      <li>Avoid exposing verbose error messages in production, they hand valuable information to attackers.</li>
+      <li>APIs should return generic error responses while logging detailed errors securely on the server side for diagnostics.</li>
+      </ul>
+
+      <h1 id="api9">API9</h1>
+      <h3 id="improper-assets-management">Improper Assets Management</h3>
+      <p><strong>Improper Assets Management</strong> occurs when old, unmaintained, or undocumented API versions remain accessible and unprotected. Attackers can exploit these forgotten endpoints — often lacking security controls applied in newer versions — to compromise systems.<br>
+      <img src="./vapi_resources/967dd542e1fa43bba5e72528b5972186.png" alt="898bced7fbe667e628e58526fcf18518.png"></p>
+      <p><strong>Walkthrough</strong><br>
+      The API hints:<br>
+      <em><strong>&quot;Hey Good News!!!!! We just launched our v2 API :)&quot;</strong></em></p>
+      <h3 id="naturally-i-started-exploring-the-v2-api">Naturally, I started exploring the v2 API.</h3>
+      <p><strong>Testing the v2 Endpoint</strong><br>
+      I sent a login request to:</p>
+      <pre>http://{{host}}/vapi/api9/v2/user/login</pre>
+      <p>Burp Suite revealed that v2 was well-protected: it enforced rate limiting to defend against brute force attacks.<br>
+      ️<br>
+      <strong>Discovering the Old v1 API</strong><br>
+      Curious, I changed v2 to v1 in the URL:<br>
+      <img src="./vapi_resources/c81ccb4d8f9647bebd5b6d2d15df0a9f.png" alt="6eddb4dbb6bc1aba61ab520e191e8df1.png"><br>
+      I found that the v1 endpoint was still active, but critically, it lacked the rate-limiting protections present in v2.<br>
+      <img src="./vapi_resources/8245778a45c84bc1b3f1edd87b701e09.png" alt="9951924947c2cd2d6042f701d7b4cdec.png"><br>
+      <strong>Brute Forcing the PIN</strong><br>
+      Taking advantage of the unprotected v1 API, I launched a brute-force attack to guess the user’s PIN.</p>
+      <p>After some attempts, I successfully discovered the PIN:</p>
+      <pre>1655</pre>
+      <p>Armed with the valid PIN, I returned to the intended v2 API endpoint and logged in successfully.<br>
+      and got the task flag<br>
+      <img src="./vapi_resources/8b885ff4455f483b8f91c74b8ad3122d.png" alt="a640b54d25b2f1ca7324b323e082af92.png"></p>
+      <p><strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Always retire or secure old API versions. Leaving them exposed creates unnecessary attack surfaces, often missing critical security controls introduced in newer versions.</li>
+      <li>Maintain an up-to-date API inventory and apply consistent security measures across all versions.</li>
+      <li>Implement version deprecation policies and monitor for unauthorized access to legacy APIs.</li>
+      </ul>
+
+      <h1 id="api10">API10</h1>
+      <h3 id="insufficient-logging-and-monitoring">Insufficient Logging and Monitoring</h3>
+      <p><strong>Insufficient Logging and Monitoring</strong> is a critical weakness where security-relevant events aren’t properly captured or reviewed, leaving applications blind to malicious activities. Without effective logging and alerting, breaches can go undetected, enabling attackers to exploit systems without fear of discovery.</p>
+      <p><strong>Walkthrough</strong><br>
+      The API hints at its vulnerability with an almost comical admission:</p>
+      <p><em><strong>&quot;Nothing has been logged or monitored. You caught us :(&quot;</strong></em></p>
+      <p>In this challenge, there was no need for advanced techniques, injections, or brute forcing. I simply sent a request to the vulnerable API endpoint.</p>
+      <ul>
+      <li>The server returned the flag immediately, without any sign that my action had been recorded, flagged, or alerted on.<br>
+      <img src="./vapi_resources/c442d8e5950c4c66a7cf1feffbee07ef.png" alt="8ac73a019178c2dd97e20e46d3d7fd11.png"></li>
+      </ul>
+      <p><strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Logging and monitoring form the backbone of API security operations. Without them:
+      <ul>
+      <li>Malicious actions go unnoticed.</li>
+      <li>Incidents are harder to detect, investigate, and respond to.</li>
+      <li>Attackers operate freely without fear of triggering alarms.<br>
+      ️</li>
+      </ul>
+      </li>
+      </ul>
+      <h1 id="arena">ARENA</h1>
+      <p> </p>
+      <h1 id="justweaktoken">JustWeakToken</h1>
+      <p><strong>JSON Web Tokens (JWT)</strong> are widely used for stateless authentication and authorization in APIs. However, if JWTs are improperly signed, or if the server fails to validate them correctly, attackers can easily forge tokens and escalate privileges, as this example demonstrates.<br>
+      login with my normal credentials, and I was given a jwt token</p>
+      <p><strong>Walkthrough</strong><br>
+      I began by logging in with normal credentials. The server returned a JWT token as part of the authentication process.<br>
+      <img src="./vapi_resources/ef35863a7c5a4c5b8eeeeb25e78485ad.png" alt="0d920af0db282605d41e00681a8a8418.png"></p>
+      <p>Accessing the API as a Regular User<br>
+      Using the issued JWT token, I accessed the Get User endpoint.</p>
+      <p>The API returned a benign response:<br>
+      <img src="./vapi_resources/fabe724727b64ff8930daa1247798d87.png" alt="a390958cea749ff3ac1d1931ae4b7a0d.png"></p>
+      <p><strong>Manipulating the JWT</strong><br>
+      I proxied the request through Burp Suite and sent it to Repeater.</p>
+      <p>With the help of the JWT Editor extension, I inspected the token’s payload.</p>
+      <ul>
+      <li>The payload contained a role: user claim.</li>
+      </ul>
+      <p>I modified this to <code class="inline-code">role: admin</code>, re-signed (or simply sent) the token without additional protections, and sent the request.</p>
+      <p>The server accepted the forged token and responded with:<br>
+      <img src="./vapi_resources/1e4a58ef1789419f960da154112bc23d.png" alt="3ecdb20d32380dfbc05880b1e530a4c2.png"></p>
+      <p>*<strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Always verify JWT signatures properly. Never trust the payload without verifying it against a known secret or public key.</li>
+      <li>Avoid sensitive information in token claims unless absolutely necessary.</li>
+      <li>If possible, use asymmetric signing algorithms (e.g., RS256) and manage keys securely.</li>
+      <li>Regularly audit and rotate JWT secrets / keys.</li>
+      </ul>
+      <p> </p>
+      <h1 id="serversurfer">ServerSurfer</h1>
+      <h2 id="server-side-request-forgery-ssrf">Server-Side Request Forgery (SSRF)</h2>
+      <p>Server-Side Request Forgery (SSRF) vulnerabilities occur when an API or server accepts user-supplied URLs and fetches data on behalf of the client without proper validation. This allows attackers to make the server issue arbitrary HTTP requests, potentially targeting internal systems or external services.</p>
+      <p><strong>Walkthrough</strong><br>
+      I explored the ServerSurfer sub-folder in the Arena folder of the Postman collection, where I found the Get Data request.</p>
+      <p><strong>Sending the Initial Request</strong><br>
+      I sent the Get Data request, which included a URL as a GET parameter, a clear hint of potential SSRF.<br>
+      <img src="./vapi_resources/754bea9fb5284beabb5370fe5f670c30.png" alt="8ec469022b8c4aa6cb77251fb7200134.png"></p>
+      <p><strong>Inspecting the Response</strong><br>
+      The response body included a large base64-encoded blob as the value of the &quot;data&quot; field.<br>
+      Once decoded, this revealed the HTML content of the vAPI developer’s website, confirming that the server was fetching and relaying external content based on my supplied URL.<br>
+      <img src="./vapi_resources/a7de8aec8e8e46a69b2a8f130c47d523.png" alt="c7431bbf752e2dcd4bc273563dea745a.png"></p>
+      <p><strong>Demonstrating SSRF</strong><br>
+      To demonstrate control over the server’s request behavior:</p>
+      <ul>
+      <li>
+      <p>I opened <a data-from-md title='https://webhook.site' href='https://webhook.site'>https://webhook.site</a> in my browser.</p>
+      </li>
+      <li>
+      <p>I created a new webhook with custom response content:<br>
+      <img src="./vapi_resources/4fd66c39809d4c0aaebee9208f2ae791.png" alt="b539507148efb03af3b0ad82018b1ff9.png"></p>
+      </li>
+      <li>
+      <p>I copied the generated URL and pasted it into the GET parameter of my poastman request.</p>
+      </li>
+      <li>
+      <p><strong>Extracting the Flag</strong><br>
+      When I resent the request, the server contacted the webhook URL I supplied, and returned a base64-encoded response.<br>
+      <img src="./vapi_resources/c5ec156517524db29e197de01b960f98.png" alt="aa5bd316d653e6efe4caa253089c80bb.png"><br>
+      After decoding, I recovered my custom message<br>
+      <img src="./vapi_resources/ffddf617f0364528b0ca84f9f7a91275.png" alt="83aedf5c06e83f2f8f50d675068cc117.png"></p>
+      </li>
+      </ul>
+      <p><strong>Key Takeaway</strong></p>
+      <ul>
+      <li>SSRF vulnerabilities can be highly dangerous, as they let attackers:
+      <ul>
+      <li>Access internal resources (e.g., 127.0.0.1, admin panels, metadata services).</li>
+      <li>Pivot into internal networks.</li>
+      <li>Leak sensitive data.</li>
+      <li>Deliver malicious payloads (e.g., targeting internal APIs).</li>
+      </ul>
+      </li>
+      </ul>
+      <p> </p>
+      <h1 id="stickynotes">StickyNotes</h1>
+      <h3 id="cross-site-scripting-xss">Cross-Site Scripting (XSS)</h3>
+      <p><strong>Cross-Site Scripting (XSS)</strong> vulnerabilities occur when an application improperly handles user-supplied input and reflects it back to users without proper encoding or sanitization. Attackers can inject malicious scripts that execute in the browsers of other users, leading to session hijacking, defacement, or data theft.</p>
+      <p><strong>Walkthrough</strong><br>
+      I explored the StickyNotes sub-folder in the Arena folder of the collection.</p>
+      <p><strong>Storing a Note</strong><br>
+      I sent a Store a Note request using the suggested request body.<br>
+      <img src="./vapi_resources/5905cd45f23b4055a97029e3a483d744.png" alt="2a9df8108c7848341441ebb473587a66.png"><br>
+      Then, I checked the Get Notes request.<br>
+      In the Params section, I noticed:</p>
+      <ul>
+      <li>A custom request header that had html as its value.</li>
+      <li>The same parameter was present as a GET parameter in the URL.</li>
+      </ul>
+      <p><strong>This hinted that the data in the note field would be rendered as raw HTML.</strong></p>
+      <p><strong>Crafting an XSS Payload</strong><br>
+      To test this, I crafted a payload designed to trigger a browser alert:</p>
+      <pre>&lt;script&gt;alert("Gotcha! flag{successful_XSS_attack}")&lt;/script&gt;</pre>
+      <p>I sent this payload in a new Store a Note request.<br>
+      <img src="./vapi_resources/dcdbbbb48d4b4fb392bf4a75c61af2f9.png" alt="a6dd44496768189a5e79b8a0f8961276.png"></p>
+      <p><strong>Retrieving and Verifying</strong><br>
+      I followed up with a Get Notes request and proxied it through Burp Suite.</p>
+      <ul>
+      <li>The response headers included:</li>
+      </ul>
+      <pre>Content-Type: text/html; charset=UTF-8</pre>
+      <ul>
+      <li>The body contained my injected script — unescaped.<br>
+      <img src="./vapi_resources/2b4b31dacee743ca8b699bd3f579b684.png" alt="d153120a2643216786c4272765b2958f.png"></li>
+      </ul>
+      <p><strong>Demonstrating in Browser</strong><br>
+      To see it live, I pasted the Get Notes URL into my browser. The alert popped up as expected — confirming that the XSS worked.<br>
+      <img src="./vapi_resources/2e01fd2587a54e2898cb5c2a3fef319f.png" alt="559e3c80018ed4e461308fc238ae0da9.png"><br>
+      ️<br>
+      ️<br>
+      <strong>Key Takeaway</strong></p>
+      <ul>
+      <li>Always escape or sanitize user input before rendering it in HTML.</li>
+      <li>Use frameworks or templating engines that auto-escape output by default.</li>
+      <li>Set correct response headers (Content-Type: application/json, not text/html when not necessary).</li>
+      <li>Implement Content Security Policy (CSP) headers to reduce XSS impact</li>
+      </ul>
+
+      <div class="success-banner">
+        <i class="fas fa-trophy"></i>
+        <span>vAPI Lab Completed! 🎉</span>
       </div>
-
-      <div class="challenge-info">
-        <h3>Summary</h3>
-        <p>This writeup covers the exploitation of multiple API vulnerabilities in the vAPI challenge, mapped to the OWASP API Security Top 10. Each section demonstrates a real-world API flaw, exploitation steps, and key takeaways for secure API design.</p>
-      </div>
-
-      <h2 id="api1">API1: Broken Object Level Authorization (BOLA)</h2>
-      <p>BOLA occurs when APIs fail to enforce proper authorization checks, allowing attackers to access or modify resources they do not own. In vAPI, predictable user IDs enabled access to other users' data.</p>
-      <img src="./vapi_resources/387101d41f894a61a0423984f9222896.png" alt="User registration">
-      <pre><code>GET http://{{host}}/vapi/api1/user/{id}</code></pre>
-      <img src="./vapi_resources/575fe068af13430a9a9ac1b172ddf18e.png" alt="Accessing other users">
-      <img src="./vapi_resources/84c969b9fd3046748468a69a200c524c.png" alt="Flag for user 1">
-      <p><strong>Key Takeaway:</strong> Always verify object ownership before returning or modifying data. Do not rely solely on predictable IDs.</p>
-
-      <h2 id="api2">API2: Broken Authentication</h2>
-      <p>Weak authentication allows attackers to compromise accounts. Here, credentials were found in a resource file and brute-forced using Burp Suite Intruder.</p>
-      <img src="./vapi_resources/2877593bc93a477291eabafa202650ec.png" alt="creds.csv">
-      <pre><code>awk -F',' '{print $1 > "emails.txt"; print $2 > "passwords.txt"}' creds.csv</code></pre>
-      <img src="./vapi_resources/eb84c68f3e47407c9997d7ab98852897.png" alt="Burp Intruder brute force">
-      <img src="./vapi_resources/00821815e5654a4b8e186056ca66d7a1.png" alt="Valid credentials found">
-      <img src="./vapi_resources/93f0b08b2da549feb81faa54c585d090.png" alt="Accessing user details">
-      <p><strong>Key Takeaway:</strong> Enforce strong authentication, rate limiting, and never expose credentials in public resources.</p>
-
-      <h2 id="api3">API3: Excessive Data Exposure & Mass Assignment</h2>
-      <p>APIs should only return necessary data. Here, sensitive fields like flags and location were exposed in API responses. Mass assignment allowed attackers to set unauthorized fields.</p>
-      <img src="./vapi_resources/1ef2f9da44d64295820a21b5bfbe19cc.png" alt="Excessive data exposure">
-      <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="Mass assignment exploit">
-      <p><strong>Key Takeaway:</strong> Filter response data server-side and use allowlists for accepted input fields.</p>
-
-      <h2 id="api4">API4: Lack of Resources & Rate Limiting</h2>
-      <p>Without rate limiting, APIs are vulnerable to brute force and DoS. The OTP endpoint accepted unlimited attempts, allowing attackers to brute-force the code.</p>
-      <img src="./vapi_resources/3ce6d626787640a1b22a0d7caa20ff7c.png" alt="OTP endpoint">
-      <img src="./vapi_resources/5f5b53f812f74b7986e1ff9bf5304b83.png" alt="Brute-forcing OTP">
-      <img src="./vapi_resources/146a7f2af86c437b8511e2ddbfbf6c57.png" alt="OTP bypassed">
-      <p><strong>Key Takeaway:</strong> Always implement rate limiting and resource quotas on sensitive endpoints.</p>
-
-      <h2 id="api5">API5: Broken Function Level Authorization (BFLA)</h2>
-      <p>BFLA occurs when APIs fail to restrict access to privileged functions. Here, an endpoint allowed dumping all user data, exposing sensitive information.</p>
-      <img src="./vapi_resources/05e270da7fd94a9f8ee2754ad9df3adc.png" alt="Dumping all users">
-      <p><strong>Key Takeaway:</strong> Restrict sensitive functions to authorized users only and validate permissions for every action.</p>
-
-      <h2 id="api6">API6: Mass Assignment</h2>
-      <p>Mass assignment lets attackers set sensitive fields by including them in requests. The API allowed setting the <code>credit</code> field during user creation.</p>
-      <img src="./vapi_resources/1bbcac7163674a799d1ca483e3d7cfaa.png" alt="Mass assignment request">
-      <img src="./vapi_resources/59eedca16c5a48068edddad288a208fb.png" alt="Credits set via mass assignment">
-      <p><strong>Key Takeaway:</strong> Use strict input validation and never allow clients to set sensitive properties directly.</p>
-
-      <h2 id="api7">API7: Security Misconfiguration (CORS)</h2>
-      <p>Misconfigured CORS headers allowed any origin to make authenticated requests, exposing sensitive data.</p>
-      <pre><code>Access-Control-Allow-Origin: *
-Access-Control-Allow-Credentials: true</code></pre>
-      <img src="./vapi_resources/dd6c86add62b4f28bd295f0fad4cd33f.png" alt="CORS misconfiguration">
-      <p><strong>Key Takeaway:</strong> Never combine <code>Access-Control-Allow-Origin: *</code> with <code>Access-Control-Allow-Credentials: true</code>. Always specify trusted origins.</p>
-
-      <h2 id="api8">API8: Injection</h2>
-      <p>The login endpoint was vulnerable to SQL injection, allowing attackers to bypass authentication and access protected endpoints.</p>
-      <img src="./vapi_resources/f5012921ab5f4ac7b408236b382e11ab.png" alt="SQL error">
-      <img src="./vapi_resources/83e340531d594f97a6c68083b4ecb554.png" alt="Successful SQLi">
-      <img src="./vapi_resources/af5e48389f384af3b3a527d49dd92e32.png" alt="Flag via SQLi">
-      <p><strong>Key Takeaway:</strong> Always use parameterized queries and never expose verbose error messages.</p>
-
-      <h2 id="api9">API9: Improper Assets Management</h2>
-      <p>Old, unprotected API versions were left accessible, lacking security controls like rate limiting.</p>
-      <img src="./vapi_resources/8245778a45c84bc1b3f1edd87b701e09.png" alt="Old API version brute-forced">
-      <img src="./vapi_resources/8b885ff4455f483b8f91c74b8ad3122d.png" alt="Flag from old API">
-      <p><strong>Key Takeaway:</strong> Retire or secure old API versions and maintain an up-to-date API inventory.</p>
-
-      <h2 id="api10">API10: Insufficient Logging and Monitoring</h2>
-      <p>The API failed to log or monitor sensitive actions, allowing attacks to go undetected.</p>
-      <img src="./vapi_resources/c442d8e5950c4c66a7cf1feffbee07ef.png" alt="No logging or monitoring">
-      <p><strong>Key Takeaway:</strong> Implement comprehensive logging and monitoring for all security-relevant events.</p>
-
-      <h2 id="jwt">JustWeakToken: JWT Manipulation</h2>
-      <p>The API accepted forged JWT tokens, allowing privilege escalation by modifying the <code>role</code> claim.</p>
-      <img src="./vapi_resources/ef35863a7c5a4c5b8eeeeb25e78485ad.png" alt="JWT issued">
-      <img src="./vapi_resources/1e4a58ef1789419f960da154112bc23d.png" alt="JWT privilege escalation">
-      <p><strong>Key Takeaway:</strong> Always verify JWT signatures and use secure signing algorithms.</p>
-
-      <h2 id="ssrf">ServerSurfer: Server-Side Request Forgery (SSRF)</h2>
-      <p>SSRF vulnerabilities allowed attackers to make the server fetch arbitrary URLs, exposing internal resources.</p>
-      <img src="./vapi_resources/754bea9fb5284beabb5370fe5f670c30.png" alt="SSRF request">
-      <img src="./vapi_resources/c5ec156517524db29e197de01b960f98.png" alt="SSRF exfiltration">
-      <p><strong>Key Takeaway:</strong> Always validate and restrict URLs accepted by the server.</p>
-
-      <h2 id="xss">StickyNotes: Cross-Site Scripting (XSS)</h2>
-      <p>The API reflected unsanitized user input, allowing stored XSS attacks.</p>
-      <img src="./vapi_resources/dcdbbbb48d4b4fb392bf4a75c61af2f9.png" alt="XSS payload stored">
-      <img src="./vapi_resources/2e01fd2587a54e2898cb5c2a3fef319f.png" alt="XSS alert">
-      <p><strong>Key Takeaway:</strong> Always sanitize user input and set appropriate response headers.</p>
     </div>
 
     <div class="writeup-navigation">
